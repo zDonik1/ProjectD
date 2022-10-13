@@ -14,6 +14,9 @@ func _ready():
 	get_tree().connect("connection_failed", self, "_connection_failed")
 
 
+func get_tree():
+	return .get_tree()
+
 func create_server():
 	server = NetworkedMultiplayerENet.new()
 	server.create_server(DEFAULT_PORT, MAX_CLIENTS)
