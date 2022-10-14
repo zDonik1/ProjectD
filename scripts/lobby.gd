@@ -8,14 +8,12 @@ var client = null
 
 var ip_address = "127.0.0.1"
 
+
 func _ready():
-	get_tree().connect("connected_to_server", self, "_connected_to_server")
-	get_tree().connect("server_disconnected", self, "_server_disconnected")
-	get_tree().connect("connection_failed", self, "_connection_failed")
-
-
-func get_tree():
-	return .get_tree()
+	var _u
+	_u = get_tree().connect("connected_to_server", self, "_connected_to_server")
+	_u = get_tree().connect("server_disconnected", self, "_server_disconnected")
+	_u = get_tree().connect("connection_failed", self, "_connection_failed")
 
 
 func create_server():

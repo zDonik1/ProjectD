@@ -4,7 +4,7 @@ var lobby
 
 
 func before_each():
-	lobby = partial_double("res://scripts/lobby.gd").new()
+	lobby = partial_double("res://scripts/lobby.gd", DOUBLE_STRATEGY.FULL).new()
 
 
 func test_connected_to_server_receiver_called_when_scene_tree_signal_emitted():
