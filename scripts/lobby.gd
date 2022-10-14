@@ -17,21 +17,26 @@ func _ready():
 func get_tree():
 	return .get_tree()
 
+
 func create_server():
 	server = NetworkedMultiplayerENet.new()
 	server.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	get_tree().set_network_peer(server)
-	
+
+
 func join_server():
 	client = NetworkedMultiplayerENet.new()
 	client.create_client(ip_address, DEFAULT_PORT)
 	get_tree().set_network_peer(client)
 
+
 func _connected_to_server():
 	print("Successfully connected to the server")
-	
+
+
 func _connection_failed():
 	print("Connection failed")
+
 
 func _server_disconnected():
 	print("Disconnected from the server")
