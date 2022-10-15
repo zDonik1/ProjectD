@@ -15,7 +15,13 @@ func _ready():
 	_u = get_tree().connect("connection_failed", self, "_connection_failed")
 
 
+func _ensure_peer_exists():
+	if peer == null:
+		peer = NetworkedMultiplayerENet.new()
+
+
 func create_server():
+	_ensure_peer_exists()
 	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	get_tree().set_network_peer(peer)
 

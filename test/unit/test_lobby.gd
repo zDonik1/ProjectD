@@ -22,13 +22,13 @@ var network_client_connection_params = ParameterFactory.named_parameters(
 
 func before_each():
 	lobby = Utils.make_lobby(self)
+	add_child(lobby)
 
 
 func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
 	params = use_parameters(network_client_connection_params)
 ):
 	stub(lobby, params.receiver)
-	add_child(lobby)
 
 	get_tree().emit_signal(params.signal)
 
@@ -38,7 +38,6 @@ func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
 func test_create_server_sets_server_network_peer_on_scene_tree():
 	var peer = partial_double(NetworkedMultiplayerENet).new()
 	lobby.peer = peer
-	add_child(lobby)
 
 	lobby.create_server()
 
@@ -51,3 +50,8 @@ func test_create_server_sets_server_network_peer_on_scene_tree():
 
 func test_peer_not_initialized_by_default():
 	assert_eq(lobby.peer, null)
+
+func test_has_peer_after_creating_server():
+	lobby.create_server()
+
+	assert_true(get_tree().has_network_peer())
