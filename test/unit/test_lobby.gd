@@ -10,11 +10,6 @@ class Utils:
 
 var lobby
 
-
-func before_each():
-	lobby = Utils.make_lobby(self)
-
-
 var network_client_connection_params = ParameterFactory.named_parameters(
 	["signal", "receiver"],
 	[
@@ -23,6 +18,10 @@ var network_client_connection_params = ParameterFactory.named_parameters(
 		["connection_failed", "_connection_failed"],
 	]
 )
+
+
+func before_each():
+	lobby = Utils.make_lobby(self)
 
 
 func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
@@ -36,11 +35,15 @@ func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
 	assert_called(lobby, params.receiver)
 
 
-func test_create_server_calls_set_network_peer_on_scene_tree():
-	var scene_tree = double("res://test/mock/mock_scene_tree.gd").new()
-	stub(lobby, "get_tree").to_return(scene_tree)
-	stub(scene_tree, "set_network_peer")
+func test_create_server_sets_server_network_peer_on_scene_tree():
+	var peer = partial_double(NetworkedMultiplayerENet).new()
+	lobby.peer = peer
+	add_child(lobby)
 
 	lobby.create_server()
 
-	assert_called(scene_tree, "set_network_peer")
+	assert_called(
+		peer, "create_server", [lobby.DEFAULT_PORT, lobby.MAX_CLIENTS, 0, 0]
+	)
+	assert_true(get_tree().has_network_peer())
+	assert_true(get_tree().is_network_server())

@@ -3,8 +3,7 @@ extends Node
 const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
 
-var server = null
-var client = null
+var peer = NetworkedMultiplayerENet.new()
 
 var ip_address = "127.0.0.1"
 
@@ -17,15 +16,13 @@ func _ready():
 
 
 func create_server():
-	server = NetworkedMultiplayerENet.new()
-	server.create_server(DEFAULT_PORT, MAX_CLIENTS)
-	get_tree().set_network_peer(server)
+	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
+	get_tree().set_network_peer(peer)
 
 
 func join_server():
-	client = NetworkedMultiplayerENet.new()
-	client.create_client(ip_address, DEFAULT_PORT)
-	get_tree().set_network_peer(client)
+	peer.create_client(ip_address, DEFAULT_PORT)
+	get_tree().set_network_peer(peer)
 
 
 func _connected_to_server():
