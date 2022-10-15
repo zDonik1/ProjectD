@@ -42,9 +42,6 @@ func _connection_failed():
 
 func _server_disconnected():
 	print("Disconnected from the server")
-	print(get_tree().get_network_peer())
-	get_tree().set_network_peer(null)
-	print(get_tree().get_network_peer())
 
 
 func _on_LineEdit_text_changed(new_text):

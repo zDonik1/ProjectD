@@ -51,6 +51,13 @@ func test_has_peer_after_joining_server():
 	assert_true(get_tree().has_network_peer())
 
 
+func test_on_LineEdit_text_changed_sets_ip_address():
+	var text = "some text here"
+	lobby._on_LineEdit_text_changed(text)
+	
+	assert_eq(lobby.ip_address, text)
+
+
 class TestLobbyWithMockPeer:
 	extends GutTest
 
