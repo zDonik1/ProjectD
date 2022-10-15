@@ -47,3 +47,7 @@ func test_create_server_sets_server_network_peer_on_scene_tree():
 	)
 	assert_true(get_tree().has_network_peer())
 	assert_true(get_tree().is_network_server())
+
+
+func test_peer_not_initialized_by_default():
+	assert_eq(lobby.peer, null)

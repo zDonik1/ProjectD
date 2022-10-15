@@ -3,7 +3,7 @@ extends Node
 const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
 
-var peer = NetworkedMultiplayerENet.new()
+var peer
 
 var ip_address = "127.0.0.1"
 
