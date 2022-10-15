@@ -45,6 +45,12 @@ func test_has_peer_after_creating_server():
 	assert_true(get_tree().has_network_peer())
 
 
+func test_has_peer_after_joining_server():
+	lobby.join_server()
+
+	assert_true(get_tree().has_network_peer())
+
+
 class TestLobbyWithMockPeer:
 	extends GutTest
 

@@ -27,6 +27,7 @@ func create_server():
 
 
 func join_server():
+	_ensure_peer_exists()
 	peer.create_client(ip_address, DEFAULT_PORT)
 	get_tree().set_network_peer(peer)
 
