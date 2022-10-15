@@ -31,6 +31,14 @@ class TestInSceneTree:
 		get_tree().emit_signal("server_disconnected")
 
 		assert_called(lobby, "_server_disconnected")
+	
+	func test_connection_failed_receiver_called_when_scene_tree_signal_emitted():
+		stub(lobby, "_connection_failed")
+		add_child(lobby)
+
+		get_tree().emit_signal("connection_failed")
+
+		assert_called(lobby, "_connection_failed")
 
 
 var lobby
