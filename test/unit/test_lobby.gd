@@ -8,44 +8,32 @@ class Utils:
 		return lobby
 
 
-class TestInSceneTree:
-	extends GutTest
-
-	var lobby
-
-	func before_each():
-		lobby = Utils.make_lobby(self)
-
-	func test_connected_to_server_receiver_called_when_scene_tree_signal_emitted():
-		stub(lobby, "_connected_to_server")
-		add_child(lobby)
-
-		get_tree().emit_signal("connected_to_server")
-
-		assert_called(lobby, "_connected_to_server")
-
-	func test_server_disconnected_receiver_called_when_scene_tree_signal_emitted():
-		stub(lobby, "_server_disconnected")
-		add_child(lobby)
-
-		get_tree().emit_signal("server_disconnected")
-
-		assert_called(lobby, "_server_disconnected")
-	
-	func test_connection_failed_receiver_called_when_scene_tree_signal_emitted():
-		stub(lobby, "_connection_failed")
-		add_child(lobby)
-
-		get_tree().emit_signal("connection_failed")
-
-		assert_called(lobby, "_connection_failed")
-
-
 var lobby
 
 
 func before_each():
 	lobby = Utils.make_lobby(self)
+
+
+var network_client_connection_params = ParameterFactory.named_parameters(
+	["signal", "receiver"],
+	[
+		["connected_to_server", "_connected_to_server"],
+		["server_disconnected", "_server_disconnected"],
+		["connection_failed", "_connection_failed"],
+	]
+)
+
+
+func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
+	params = use_parameters(network_client_connection_params)
+):
+	stub(lobby, params.receiver)
+	add_child(lobby)
+
+	get_tree().emit_signal(params.signal)
+
+	assert_called(lobby, params.receiver)
 
 
 func test_create_server_calls_set_network_peer_on_scene_tree():
