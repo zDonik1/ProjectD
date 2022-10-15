@@ -5,6 +5,7 @@ class Utils:
 	static func make_lobby(tst_inst):
 		var lobby = tst_inst.partial_double("res://scripts/lobby.gd", tst_inst.DOUBLE_STRATEGY.FULL).new()
 		tst_inst.stub(lobby, "_ready").to_call_super()
+		tst_inst.add_child(lobby)
 		return lobby
 
 
@@ -22,7 +23,6 @@ var network_client_connection_params = ParameterFactory.named_parameters(
 
 func before_each():
 	lobby = Utils.make_lobby(self)
-	add_child(lobby)
 
 
 func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
@@ -35,23 +35,39 @@ func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
 	assert_called(lobby, params.receiver)
 
 
-func test_create_server_sets_server_network_peer_on_scene_tree():
-	var peer = partial_double(NetworkedMultiplayerENet).new()
-	lobby.peer = peer
-
-	lobby.create_server()
-
-	assert_called(
-		peer, "create_server", [lobby.DEFAULT_PORT, lobby.MAX_CLIENTS, 0, 0]
-	)
-	assert_true(get_tree().has_network_peer())
-	assert_true(get_tree().is_network_server())
-
-
 func test_peer_not_initialized_by_default():
 	assert_eq(lobby.peer, null)
+
 
 func test_has_peer_after_creating_server():
 	lobby.create_server()
 
 	assert_true(get_tree().has_network_peer())
+
+
+class TestLobbyWithMockPeer:
+	extends GutTest
+
+	var lobby
+	var peer
+
+	func before_each():
+		lobby = Utils.make_lobby(self)
+		peer = partial_double(NetworkedMultiplayerENet).new()
+		lobby.peer = peer
+
+	func test_create_server_sets_server_network_peer_on_scene_tree():
+		lobby.create_server()
+
+		assert_called(
+			peer, "create_server", [lobby.DEFAULT_PORT, lobby.MAX_CLIENTS, 0, 0]
+		)
+		assert_true(get_tree().is_network_server())
+
+	func test_join_server_sets_client_network_peer_on_scene_tree():
+		lobby.join_server()
+
+		assert_called(
+			peer, "create_client", [lobby.ip_address, lobby.DEFAULT_PORT, 0, 0, 0]
+		)
+		assert_false(get_tree().is_network_server())
