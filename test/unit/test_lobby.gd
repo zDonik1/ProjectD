@@ -11,9 +11,11 @@ class Utils:
 
 var lobby
 
-var network_client_connection_params = ParameterFactory.named_parameters(
+var network_connection_params = ParameterFactory.named_parameters(
 	["signal", "receiver"],
 	[
+		["network_peer_connected", "_network_peer_connected"],
+		["network_peer_disconnected", "_network_peer_disconnected"],
 		["connected_to_server", "_connected_to_server"],
 		["server_disconnected", "_server_disconnected"],
 		["connection_failed", "_connection_failed"],
@@ -25,8 +27,8 @@ func before_each():
 	lobby = Utils.make_lobby(self)
 
 
-func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
-	params = use_parameters(network_client_connection_params)
+func test_appropriate_receiver_called_when_network_signal_emitted_on_scene_tree(
+	params = use_parameters(network_connection_params)
 ):
 	stub(lobby, params.receiver)
 
@@ -53,6 +55,7 @@ func test_has_peer_after_joining_server():
 
 func test_on_LineEdit_text_changed_sets_ip_address():
 	var text = "some text here"
+	
 	lobby._on_LineEdit_text_changed(text)
 	
 	assert_eq(lobby.ip_address, text)
