@@ -30,7 +30,7 @@ func before_each():
 func test_appropriate_receiver_called_when_network_signal_emitted_on_scene_tree(
 	params = use_parameters(network_connection_params)
 ):
-	stub(lobby, params.receiver)
+	stub(lobby, params.receiver).to_do_nothing()
 
 	get_tree().emit_signal(params.signal)
 
@@ -55,9 +55,9 @@ func test_has_peer_after_joining_server():
 
 func test_on_LineEdit_text_changed_sets_ip_address():
 	var text = "some text here"
-	
+
 	lobby._on_LineEdit_text_changed(text)
-	
+
 	assert_eq(lobby.ip_address, text)
 
 
@@ -84,6 +84,29 @@ class TestLobbyWithMockPeer:
 		lobby.join_server()
 
 		assert_called(
-			peer, "create_client", [lobby.ip_address, lobby.DEFAULT_PORT, 0, 0, 0]
+			peer,
+			"create_client",
+			[lobby.ip_address, lobby.DEFAULT_PORT, 0, 0, 0]
 		)
 		assert_false(get_tree().is_network_server())
+
+
+class TestRpcCalls:
+	extends GutTest
+	
+	const LOBBY_PATH = "res://scripts/lobby.gd"
+	const PLAYER_NAME = "Some player 123"
+
+	func test_rpc_register_player_called_with_player_name_when_peer_connects():
+		stub(LOBBY_PATH, "rpc_id").to_do_nothing().param_count(3)
+
+		var lobby = partial_double(LOBBY_PATH, DOUBLE_STRATEGY.FULL).new()
+		stub(lobby, "_ready").to_call_super()
+		add_child(lobby)
+		lobby.player_name = PLAYER_NAME
+
+		lobby._network_peer_connected(10)
+
+		assert_called(
+			lobby, "rpc_id", [10, "_register_player", PLAYER_NAME]
+		)

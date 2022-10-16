@@ -4,8 +4,8 @@ const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
 
 var peer
-
 var ip_address = "127.0.0.1"
+var player_name = "Player "
 
 
 func _ready():
@@ -40,6 +40,8 @@ func join_server():
 
 func _network_peer_connected(id):
 	print("Client connected with id ", id)
+	
+	rpc_id(id, "_register_player", player_name)
 
 
 func _network_peer_disconnected(id):
@@ -60,3 +62,7 @@ func _server_disconnected():
 
 func _on_LineEdit_text_changed(new_text):
 	ip_address = new_text
+
+
+remote func _register_player(_name):
+	pass
