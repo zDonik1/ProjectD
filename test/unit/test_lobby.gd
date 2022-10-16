@@ -113,6 +113,12 @@ class TestRpcCalls:
 
 		assert_called(lobby, "rpc", ["_register_new_player", info])
 
-
-# TEST CASES
-# self info is added to players_info
+	func test_players_info_has_self_info_after_connecting_to_server():
+		var id = 10
+		var scene_tree = double("res://test/mock/mock_scene_tree.gd").new()
+		stub(scene_tree, "get_network_unique_id").to_return(id)
+		stub(lobby, "get_tree").to_return(scene_tree)
+	
+		lobby._connected_to_server()
+	
+		assert_eq_deep(lobby.players_info, [{"id": id, "info": {"name": "Player"}}])

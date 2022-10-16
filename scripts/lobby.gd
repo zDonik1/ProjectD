@@ -5,7 +5,9 @@ const MAX_CLIENTS = 3
 
 var peer = null
 var ip_address = "127.0.0.1"
+
 var info = {"name": "Player"}
+var players_info = []
 
 
 func _ready():
@@ -49,6 +51,8 @@ func _network_peer_disconnected(id):
 func _connected_to_server():
 	print("Successfully connected to the server")
 
+	players_info.append({"id": get_tree().get_network_unique_id(), "info": info})
+
 	rpc("_register_new_player", info)
 
 
@@ -62,7 +66,3 @@ func _server_disconnected():
 
 func _on_LineEdit_text_changed(new_text):
 	ip_address = new_text
-
-
-remote func _register_new_player(info):
-	pass

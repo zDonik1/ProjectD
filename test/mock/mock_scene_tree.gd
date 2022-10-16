@@ -1,2 +1,2 @@
-func set_network_peer(_peer):
-    pass
+func get_network_unique_id():
+	pass
