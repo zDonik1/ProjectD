@@ -103,6 +103,7 @@ class TestRpcCalls:
 
 	func before_each():
 		stub(Utils.get_lobby_path(), "rpc").to_do_nothing().param_count(2)
+		stub(Utils.get_lobby_path(), "rpc_id").to_do_nothing().param_count(3)
 		lobby = Utils.make_lobby(self)
 
 	func test_rpc_register_new_player_by_player_to_players_when_connected_to_server():
@@ -118,7 +119,21 @@ class TestRpcCalls:
 		var scene_tree = double("res://test/mock/mock_scene_tree.gd").new()
 		stub(scene_tree, "get_network_unique_id").to_return(id)
 		stub(lobby, "get_tree").to_return(scene_tree)
-	
+
 		lobby._connected_to_server()
-	
-		assert_eq_deep(lobby.players_info, [{"id": id, "info": {"name": "Player"}}])
+
+		assert_eq_deep(
+			lobby.players_info, [{"id": id, "info": {"name": "Player"}}]
+		)
+
+	func test_rpc_register_all_players_by_server_to_player_when_network_peer_connected():
+		var id = 10
+		var players_info = [
+			{"id": 1, "info": {"name": "Player 1"}},
+			{"id": 2, "info": {"name": "Player 2"}}
+		]
+		lobby.players_info = players_info
+
+		lobby._network_peer_connected(id)
+
+		assert_called(lobby, "rpc_id", [id, "_register_all_players", players_info])
