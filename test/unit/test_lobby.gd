@@ -2,8 +2,11 @@ extends GutTest
 
 
 class Utils:
+	static func get_lobby_path():
+		return "res://scripts/lobby.gd"
+
 	static func make_lobby(tst_inst):
-		var lobby = tst_inst.partial_double("res://scripts/lobby.gd", tst_inst.DOUBLE_STRATEGY.FULL).new()
+		var lobby = tst_inst.partial_double(get_lobby_path(), tst_inst.DOUBLE_STRATEGY.FULL).new()
 		tst_inst.stub(lobby, "_ready").to_call_super()
 		tst_inst.add_child(lobby)
 		return lobby
@@ -43,22 +46,8 @@ func test_peer_not_initialized_by_default():
 	assert_eq(lobby.peer, null)
 
 
-func test_player_name_not_initialized_by_default():
-	assert_eq(lobby.player_name, null)
-
-
-func test_player_name_initialized_to_player_0_after_creating_server():
-	lobby.create_server()
-
-	assert_eq(lobby.player_name, "Player 0")
-
-
-func test_player_name_not_changed_after_creating_server_when_initialized():
-	lobby.player_name = PLAYER_NAME
-
-	lobby.create_server()
-
-	assert_eq(lobby.player_name, PLAYER_NAME)
+func test_info_name_initialized_to_Player():
+	assert_eq(lobby.info["name"], "Player")
 
 
 func test_has_peer_after_joining_server():
@@ -107,20 +96,11 @@ class TestLobbyWithMockPeer:
 
 class TestRpcCalls:
 	extends GutTest
-	
-	const LOBBY_PATH = "res://scripts/lobby.gd"
+
 	const PLAYER_NAME = "Some player 123"
 
-	func test_rpc_register_player_called_with_player_name_when_peer_connects():
-		stub(LOBBY_PATH, "rpc_id").to_do_nothing().param_count(3)
+	var lobby
 
-		var lobby = partial_double(LOBBY_PATH, DOUBLE_STRATEGY.FULL).new()
-		stub(lobby, "_ready").to_call_super()
-		add_child(lobby)
-		lobby.player_name = PLAYER_NAME
-
-		lobby._network_peer_connected(10)
-
-		assert_called(
-			lobby, "rpc_id", [10, "_register_player", PLAYER_NAME]
-		)
+	func before_each():
+		stub(Utils.get_lobby_path(), "rpc_id").to_do_nothing().param_count(3)
+		lobby = Utils.make_lobby(self)

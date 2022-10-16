@@ -5,7 +5,7 @@ const MAX_CLIENTS = 3
 
 var peer = null
 var ip_address = "127.0.0.1"
-var player_name = null
+var info = {"name": "Player"}
 
 
 func _ready():
@@ -30,8 +30,6 @@ func create_server():
 	_ensure_peer_exists()
 	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	get_tree().set_network_peer(peer)
-	if player_name == null:
-		player_name = "Player 0"
 
 
 func join_server():
@@ -41,13 +39,11 @@ func join_server():
 
 
 func _network_peer_connected(id):
-	print("Client connected with id ", id)
-
-	rpc_id(id, "_register_player", player_name)
+	print("Peer connected with id ", id)
 
 
 func _network_peer_disconnected(id):
-	print("Client disconnected with id ", id)
+	print("Peer disconnected with id ", id)
 
 
 func _connected_to_server():
@@ -64,7 +60,3 @@ func _server_disconnected():
 
 func _on_LineEdit_text_changed(new_text):
 	ip_address = new_text
-
-
-remote func _register_player(_name):
-	pass
