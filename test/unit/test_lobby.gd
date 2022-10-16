@@ -9,6 +9,8 @@ class Utils:
 		return lobby
 
 
+const PLAYER_NAME = "Some player name"
+
 var lobby
 
 var network_connection_params = ParameterFactory.named_parameters(
@@ -49,6 +51,14 @@ func test_player_name_initialized_to_player_0_after_creating_server():
 	lobby.create_server()
 
 	assert_eq(lobby.player_name, "Player 0")
+
+
+func test_player_name_not_changed_after_creating_server_when_initialized():
+	lobby.player_name = PLAYER_NAME
+
+	lobby.create_server()
+
+	assert_eq(lobby.player_name, PLAYER_NAME)
 
 
 func test_has_peer_after_joining_server():
