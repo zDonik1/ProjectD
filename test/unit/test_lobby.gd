@@ -41,10 +41,8 @@ func test_peer_not_initialized_by_default():
 	assert_eq(lobby.peer, null)
 
 
-func test_has_peer_after_creating_server():
-	lobby.create_server()
-
-	assert_true(get_tree().has_network_peer())
+func test_player_name_not_initialized_by_default():
+	assert_eq(lobby.player_name, null)
 
 
 func test_has_peer_after_joining_server():
