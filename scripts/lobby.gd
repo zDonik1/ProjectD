@@ -30,6 +30,7 @@ func create_server():
 	_ensure_peer_exists()
 	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	get_tree().set_network_peer(peer)
+	player_name = "Player 0"
 
 
 func join_server():

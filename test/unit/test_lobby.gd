@@ -45,6 +45,12 @@ func test_player_name_not_initialized_by_default():
 	assert_eq(lobby.player_name, null)
 
 
+func test_player_name_initialized_to_player_0_after_creating_server():
+	lobby.create_server()
+
+	assert_eq(lobby.player_name, "Player 0")
+
+
 func test_has_peer_after_joining_server():
 	lobby.join_server()
 
