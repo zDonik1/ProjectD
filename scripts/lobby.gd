@@ -49,6 +49,8 @@ func _network_peer_disconnected(id):
 func _connected_to_server():
 	print("Successfully connected to the server")
 
+	rpc("_register_new_player", info)
+
 
 func _connection_failed():
 	print("Connection failed")
@@ -60,3 +62,7 @@ func _server_disconnected():
 
 func _on_LineEdit_text_changed(new_text):
 	ip_address = new_text
+
+
+remote func _register_new_player(info):
+	pass

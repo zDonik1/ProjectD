@@ -102,5 +102,17 @@ class TestRpcCalls:
 	var lobby
 
 	func before_each():
-		stub(Utils.get_lobby_path(), "rpc_id").to_do_nothing().param_count(3)
+		stub(Utils.get_lobby_path(), "rpc").to_do_nothing().param_count(2)
 		lobby = Utils.make_lobby(self)
+
+	func test_rpc_register_new_player_by_player_to_players_when_connected_to_server():
+		var info = {"name": "Some player name"}
+		lobby.info = info
+
+		lobby._connected_to_server()
+
+		assert_called(lobby, "rpc", ["_register_new_player", info])
+
+
+# TEST CASES
+# self info is added to players_info
