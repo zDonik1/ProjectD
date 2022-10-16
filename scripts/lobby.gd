@@ -43,7 +43,8 @@ func join_server():
 func _network_peer_connected(id):
 	print("Peer connected with id ", id)
 
-	rpc_id(id, "_register_all_players", players_info)
+	if get_tree().is_network_server():
+		rpc_id(id, "_register_all_players", players_info)
 
 
 func _network_peer_disconnected(id):

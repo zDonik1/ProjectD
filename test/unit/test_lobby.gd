@@ -100,11 +100,14 @@ class TestRpcCalls:
 	const PLAYER_NAME = "Some player 123"
 
 	var lobby
+	var scene_tree
 
 	func before_each():
 		stub(Utils.get_lobby_path(), "rpc").to_do_nothing().param_count(2)
 		stub(Utils.get_lobby_path(), "rpc_id").to_do_nothing().param_count(3)
 		lobby = Utils.make_lobby(self)
+		scene_tree = double("res://test/mock/mock_scene_tree.gd").new()
+		stub(lobby, "get_tree").to_return(scene_tree)
 
 	func test_rpc_register_new_player_by_player_to_players_when_connected_to_server():
 		var info = {"name": "Some player name"}
@@ -116,7 +119,6 @@ class TestRpcCalls:
 
 	func test_players_info_has_self_info_after_connecting_to_server():
 		var id = 10
-		var scene_tree = double("res://test/mock/mock_scene_tree.gd").new()
 		stub(scene_tree, "get_network_unique_id").to_return(id)
 		stub(lobby, "get_tree").to_return(scene_tree)
 
@@ -133,7 +135,16 @@ class TestRpcCalls:
 			{"id": 2, "info": {"name": "Player 2"}}
 		]
 		lobby.players_info = players_info
+		stub(scene_tree, "is_network_server").to_return(true)
 
 		lobby._network_peer_connected(id)
 
 		assert_called(lobby, "rpc_id", [id, "_register_all_players", players_info])
+
+	func test_rpc_register_all_players_not_called_by_clients():
+		var id = 10
+		stub(scene_tree, "is_network_server").to_return(false)
+
+		lobby._network_peer_connected(id)
+
+		assert_not_called(lobby, "rpc_id")
