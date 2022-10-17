@@ -1,6 +1,14 @@
 extends GutTest
 
 
+class Utils:
+	static func make_doubled_lobby(tst_inst):
+		var lobby = tst_inst.partial_double(TestUtils.get_lobby_path(), tst_inst.DOUBLE_STRATEGY.FULL).new()
+		tst_inst.stub(lobby, "_ready").to_call_super()
+		tst_inst.add_child(lobby)
+		return lobby
+
+
 const PLAYER_NAME = "Some player name"
 
 var lobby
@@ -18,7 +26,7 @@ var network_connection_params = ParameterFactory.named_parameters(
 
 
 func before_each():
-	lobby = TestUtils.make_lobby(self)
+	lobby = Utils.make_lobby(self)
 
 
 func test_appropriate_receiver_called_when_network_signal_emitted_on_scene_tree(
@@ -72,7 +80,7 @@ class TestLobbyWithMockPeer:
 	var peer
 
 	func before_each():
-		lobby = TestUtils.make_lobby(self)
+		lobby = Utils.make_lobby(self)
 		peer = partial_double(NetworkedMultiplayerENet).new()
 		lobby.peer = peer
 
@@ -105,8 +113,10 @@ class TestRpcCalls:
 
 	func before_each():
 		stub(TestUtils.get_lobby_path(), "rpc").to_do_nothing().param_count(2)
-		stub(TestUtils.get_lobby_path(), "rpc_id").to_do_nothing().param_count(3)
-		lobby = TestUtils.make_lobby(self)
+		stub(TestUtils.get_lobby_path(), "rpc_id").to_do_nothing().param_count(
+			3
+		)
+		lobby = Utils.make_lobby(self)
 		scene_tree = double("res://test/mock/mock_scene_tree.gd").new()
 		stub(lobby, "get_tree").to_return(scene_tree)
 
