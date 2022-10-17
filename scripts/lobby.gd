@@ -69,3 +69,7 @@ func _server_disconnected():
 
 func _on_LineEdit_text_changed(new_text):
 	ip_address = new_text
+
+
+remote func _register_new_player(_info):
+	players_info.append(_info)
