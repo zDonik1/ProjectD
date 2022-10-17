@@ -54,7 +54,9 @@ func _network_peer_disconnected(id):
 func _connected_to_server():
 	print("Successfully connected to the server")
 
-	players_info.append({"id": get_tree().get_network_unique_id(), "info": info})
+	players_info.append(
+		{"id": get_tree().get_network_unique_id(), "info": info}
+	)
 
 	rpc("_register_new_player", info)
 
@@ -73,3 +75,7 @@ func _on_LineEdit_text_changed(new_text):
 
 remote func _register_new_player(_info):
 	players_info.append(_info)
+
+
+remote func _register_all_players(_players_info):
+	players_info = _players_info

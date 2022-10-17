@@ -8,6 +8,12 @@ class Utils:
 	static func get_player_info():
 		return {"name": "Some player name"}
 
+	static func get_players_info():
+		return [
+			{"id": 1, "info": {"name": "Player 1"}},
+			{"id": 2, "info": {"name": "Player 2"}}
+		]
+
 	static func make_lobby(tst_inst):
 		var lobby = tst_inst.partial_double(get_lobby_path(), tst_inst.DOUBLE_STRATEGY.FULL).new()
 		tst_inst.stub(lobby, "_ready").to_call_super()
@@ -71,6 +77,12 @@ func test_register_new_player_adds_player_info_to_players_info():
 	lobby._register_new_player(Utils.get_player_info())
 
 	assert_eq_deep(lobby.players_info, [Utils.get_player_info()])
+
+
+func test_register_all_players_sets_players_info():
+	lobby._register_all_players(Utils.get_players_info())
+
+	assert_eq_deep(lobby.players_info, Utils.get_players_info())
 
 
 class TestLobbyWithMockPeer:
@@ -140,17 +152,15 @@ class TestRpcCalls:
 
 	func test_rpc_register_all_players_by_server_to_player_when_network_peer_connected():
 		var id = 10
-		var players_info = [
-			{"id": 1, "info": {"name": "Player 1"}},
-			{"id": 2, "info": {"name": "Player 2"}}
-		]
-		lobby.players_info = players_info
+		lobby.players_info = Utils.get_players_info()
 		stub(scene_tree, "is_network_server").to_return(true)
 
 		lobby._network_peer_connected(id)
 
 		assert_called(
-			lobby, "rpc_id", [id, "_register_all_players", players_info]
+			lobby,
+			"rpc_id",
+			[id, "_register_all_players", Utils.get_players_info()]
 		)
 
 	func test_rpc_register_all_players_not_called_by_clients():
