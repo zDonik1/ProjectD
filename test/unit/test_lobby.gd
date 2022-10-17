@@ -1,26 +1,6 @@
 extends GutTest
 
 
-class Utils:
-	static func get_lobby_path():
-		return "res://scripts/lobby.gd"
-
-	static func get_player_info():
-		return {"name": "Some player name"}
-
-	static func get_players_info():
-		return [
-			{"id": 1, "info": {"name": "Player 1"}},
-			{"id": 2, "info": {"name": "Player 2"}}
-		]
-
-	static func make_lobby(tst_inst):
-		var lobby = tst_inst.partial_double(get_lobby_path(), tst_inst.DOUBLE_STRATEGY.FULL).new()
-		tst_inst.stub(lobby, "_ready").to_call_super()
-		tst_inst.add_child(lobby)
-		return lobby
-
-
 const PLAYER_NAME = "Some player name"
 
 var lobby
@@ -38,7 +18,7 @@ var network_connection_params = ParameterFactory.named_parameters(
 
 
 func before_each():
-	lobby = Utils.make_lobby(self)
+	lobby = TestUtils.make_lobby(self)
 
 
 func test_appropriate_receiver_called_when_network_signal_emitted_on_scene_tree(
@@ -74,15 +54,15 @@ func test_on_LineEdit_text_changed_sets_ip_address():
 
 
 func test_register_new_player_adds_player_info_to_players_info():
-	lobby._register_new_player(Utils.get_player_info())
+	lobby._register_new_player(TestUtils.get_player_info())
 
-	assert_eq_deep(lobby.players_info, [Utils.get_player_info()])
+	assert_eq_deep(lobby.players_info, [TestUtils.get_player_info()])
 
 
 func test_register_all_players_sets_players_info():
-	lobby._register_all_players(Utils.get_players_info())
+	lobby._register_all_players(TestUtils.get_players_info())
 
-	assert_eq_deep(lobby.players_info, Utils.get_players_info())
+	assert_eq_deep(lobby.players_info, TestUtils.get_players_info())
 
 
 class TestLobbyWithMockPeer:
@@ -92,7 +72,7 @@ class TestLobbyWithMockPeer:
 	var peer
 
 	func before_each():
-		lobby = Utils.make_lobby(self)
+		lobby = TestUtils.make_lobby(self)
 		peer = partial_double(NetworkedMultiplayerENet).new()
 		lobby.peer = peer
 
@@ -124,19 +104,19 @@ class TestRpcCalls:
 	var scene_tree
 
 	func before_each():
-		stub(Utils.get_lobby_path(), "rpc").to_do_nothing().param_count(2)
-		stub(Utils.get_lobby_path(), "rpc_id").to_do_nothing().param_count(3)
-		lobby = Utils.make_lobby(self)
+		stub(TestUtils.get_lobby_path(), "rpc").to_do_nothing().param_count(2)
+		stub(TestUtils.get_lobby_path(), "rpc_id").to_do_nothing().param_count(3)
+		lobby = TestUtils.make_lobby(self)
 		scene_tree = double("res://test/mock/mock_scene_tree.gd").new()
 		stub(lobby, "get_tree").to_return(scene_tree)
 
 	func test_rpc_register_new_player_by_player_to_players_when_connected_to_server():
-		lobby.info = Utils.get_player_info()
+		lobby.info = TestUtils.get_player_info()
 
 		lobby._connected_to_server()
 
 		assert_called(
-			lobby, "rpc", ["_register_new_player", Utils.get_player_info()]
+			lobby, "rpc", ["_register_new_player", TestUtils.get_player_info()]
 		)
 
 	func test_players_info_has_self_info_after_connecting_to_server():
@@ -152,7 +132,7 @@ class TestRpcCalls:
 
 	func test_rpc_register_all_players_by_server_to_player_when_network_peer_connected():
 		var id = 10
-		lobby.players_info = Utils.get_players_info()
+		lobby.players_info = TestUtils.get_players_info()
 		stub(scene_tree, "is_network_server").to_return(true)
 
 		lobby._network_peer_connected(id)
@@ -160,7 +140,7 @@ class TestRpcCalls:
 		assert_called(
 			lobby,
 			"rpc_id",
-			[id, "_register_all_players", Utils.get_players_info()]
+			[id, "_register_all_players", TestUtils.get_players_info()]
 		)
 
 	func test_rpc_register_all_players_not_called_by_clients():
