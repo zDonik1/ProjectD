@@ -2,7 +2,7 @@ extends GutTest
 
 
 class Utils:
-	static func make_doubled_lobby(tst_inst):
+	static func make_lobby(tst_inst):
 		var lobby = tst_inst.partial_double(TestUtils.get_lobby_path(), tst_inst.DOUBLE_STRATEGY.FULL).new()
 		tst_inst.stub(lobby, "_ready").to_call_super()
 		tst_inst.add_child(lobby)
