@@ -14,6 +14,9 @@ class Utils:
 	static func make_player_info_with_id(_id, _info):
 		return {"id": _id, "info": _info}
 
+	static func make_info_with_name(name):
+		return {"name": name}
+
 
 func create_server():
 	_ensure_peer_exists()
@@ -61,7 +64,7 @@ func _connected_to_server():
 	print("Successfully connected to the server")
 
 	players_info.append(
-		{"id": get_tree().get_network_unique_id(), "info": info}
+		Utils.make_player_info_with_id(get_tree().get_network_unique_id(), info)
 	)
 
 	rpc("_register_new_player", info)

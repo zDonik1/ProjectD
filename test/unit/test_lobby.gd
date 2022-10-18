@@ -3,7 +3,7 @@ extends GutTest
 
 class Utils:
 	static func make_lobby(tst_inst):
-		var lobby = tst_inst.partial_double(TestUtils.get_lobby_path(), tst_inst.DOUBLE_STRATEGY.FULL).new()
+		var lobby = tst_inst.partial_double(Lobby, tst_inst.DOUBLE_STRATEGY.FULL).new()
 		tst_inst.stub(lobby, "_ready").to_call_super()
 		tst_inst.add_child(lobby)
 		return lobby
@@ -51,6 +51,20 @@ func test_has_peer_after_joining_server():
 	lobby.join_server()
 
 	assert_true(get_tree().has_network_peer())
+
+
+func test_creating_server_intializes_players_info_with_self_info():
+	lobby.create_server()
+
+	assert_eq_deep(
+		lobby.players_info,
+		[
+			{
+				"id": get_tree().get_network_unique_id(),
+				"info": lobby.info,
+			}
+		]
+	)
 
 
 func test_on_LineEdit_text_changed_sets_ip_address():
