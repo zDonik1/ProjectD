@@ -1,4 +1,4 @@
-extends Node
+class_name Lobby extends Node
 
 const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
@@ -8,6 +8,24 @@ var ip_address = "127.0.0.1"
 
 var info = {"name": "Player"}
 var players_info = []
+
+
+class Utils:
+	static func make_player_info_with_id(_id, _info):
+		return {"id": _id, "info": _info}
+
+
+func create_server():
+	_ensure_peer_exists()
+	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
+	get_tree().set_network_peer(peer)
+	players_info = [Utils.make_player_info_with_id(get_tree().get_network_unique_id(), info)]
+
+
+func join_server():
+	_ensure_peer_exists()
+	peer.create_client(ip_address, DEFAULT_PORT)
+	get_tree().set_network_peer(peer)
 
 
 func _ready():
@@ -26,18 +44,6 @@ func _ready():
 func _ensure_peer_exists():
 	if peer == null:
 		peer = NetworkedMultiplayerENet.new()
-
-
-func create_server():
-	_ensure_peer_exists()
-	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
-	get_tree().set_network_peer(peer)
-
-
-func join_server():
-	_ensure_peer_exists()
-	peer.create_client(ip_address, DEFAULT_PORT)
-	get_tree().set_network_peer(peer)
 
 
 func _network_peer_connected(id):
@@ -74,7 +80,8 @@ func _on_LineEdit_text_changed(new_text):
 
 
 remote func _register_new_player(_info):
-	players_info.append(_info)
+	print_debug("New player registered ", _info)
+	players_info.append({"id": get_tree().get_rpc_sender_id(), "info": _info})
 
 
 remote func _register_all_players(_players_info):
