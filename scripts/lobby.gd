@@ -6,7 +6,7 @@ const MAX_CLIENTS = 3
 var peer = null
 var ip_address = "127.0.0.1"
 
-var info = {"name": "Player"}
+var info = Utils.make_info_with_name("Player")
 var players_info = []
 
 
@@ -22,7 +22,9 @@ func create_server():
 	_ensure_peer_exists()
 	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	get_tree().set_network_peer(peer)
-	players_info = [Utils.make_player_info_with_id(get_tree().get_network_unique_id(), info)]
+	players_info = [
+		Utils.make_player_info_with_id(get_tree().get_network_unique_id(), info)
+	]
 
 
 func join_server():
@@ -46,14 +48,16 @@ func _ready():
 
 func _ensure_peer_exists():
 	if peer == null:
-		peer = NetworkedMultiplayerENet.new()
+		peer = _make_peer()
+
+
+func _make_peer():
+	return NetworkedMultiplayerENet.new()
 
 
 func _network_peer_connected(id):
 	print("Peer connected with id ", id)
-
-	if get_tree().is_network_server():
-		rpc_id(id, "_register_all_players", players_info)
+	rpc_id(id, "_register_new_player", info)
 
 
 func _network_peer_disconnected(id):
@@ -61,13 +65,8 @@ func _network_peer_disconnected(id):
 
 
 func _connected_to_server():
-	print("Successfully connected to the server")
-
-	players_info.append(
-		Utils.make_player_info_with_id(get_tree().get_network_unique_id(), info)
-	)
-
-	rpc("_register_new_player", info)
+	print("Successfully connected to server")
+	_register_player(get_tree().get_network_unique_id(), info)
 
 
 func _connection_failed():
@@ -83,9 +82,9 @@ func _on_LineEdit_text_changed(new_text):
 
 
 remote func _register_new_player(_info):
-	print_debug("New player registered ", _info)
-	players_info.append({"id": get_tree().get_rpc_sender_id(), "info": _info})
+	print("New player registered ", get_tree().get_rpc_sender_id())
+	_register_player(get_tree().get_rpc_sender_id(), _info)
 
 
-remote func _register_all_players(_players_info):
-	players_info = _players_info
+func _register_player(id, _info):
+	players_info.append(Utils.make_player_info_with_id(id, _info))

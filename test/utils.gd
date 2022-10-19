@@ -26,3 +26,16 @@ static func make_free_lobby(tst_inst):
 	var lobby = tst_inst.autofree(Lobby.new())
 	lobby.name = "Lobby"
 	return lobby
+
+
+static func is_array_similar(actual_arr, expected_arr):
+	for elem in expected_arr:
+		var found = false
+		for act_elem in actual_arr:
+			if elem.hash() == act_elem.hash():
+				found = true
+
+		if not found:
+			return false
+
+	return true

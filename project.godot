@@ -9,6 +9,16 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "NetworkedMultiplayerCustom",
+"class": "FakeNetworkMultiplayerENet",
+"language": "GDScript",
+"path": "res://test/mock/fake_network_peer.gd"
+}, {
+"base": "Node",
+"class": "FakeSceneTree",
+"language": "GDScript",
+"path": "res://test/mock/fake_scene_tree.gd"
+}, {
 "base": "Reference",
 "class": "GutHookScript",
 "language": "GDScript",
@@ -24,6 +34,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/lobby.gd"
 }, {
+"base": "Node",
+"class": "SubSceneTree",
+"language": "GDScript",
+"path": "res://test/sub_scene_tree.gd"
+}, {
 "base": "Reference",
 "class": "TestUtils",
 "language": "GDScript",
@@ -35,9 +50,12 @@ _global_script_classes=[ {
 "path": "res://3rd/joystick/virtual_joystick.gd"
 } ]
 _global_script_class_icons={
+"FakeNetworkMultiplayerENet": "",
+"FakeSceneTree": "",
 "GutHookScript": "",
 "GutTest": "",
 "Lobby": "",
+"SubSceneTree": "",
 "TestUtils": "",
 "VirtualJoystick": ""
 }
@@ -119,6 +137,11 @@ move_right={
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[logging]
+
+file_logging/enable_file_logging=true
+file_logging/max_log_files=10
 
 [physics]
 
