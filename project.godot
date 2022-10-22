@@ -14,11 +14,6 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://test/mock/fake_network_peer.gd"
 }, {
-"base": "Node",
-"class": "FakeSceneTree",
-"language": "GDScript",
-"path": "res://test/mock/fake_scene_tree.gd"
-}, {
 "base": "Reference",
 "class": "GutHookScript",
 "language": "GDScript",
@@ -51,7 +46,6 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "FakeNetworkMultiplayerENet": "",
-"FakeSceneTree": "",
 "GutHookScript": "",
 "GutTest": "",
 "Lobby": "",

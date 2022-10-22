@@ -21,29 +21,29 @@ class Utils:
 func create_server():
 	_ensure_peer_exists()
 	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
-	get_tree().set_network_peer(peer)
+	multiplayer.set_network_peer(peer)
 	players_info = [
-		Utils.make_player_info_with_id(get_tree().get_network_unique_id(), info)
+		Utils.make_player_info_with_id(multiplayer.get_network_unique_id(), info)
 	]
 
 
 func join_server():
 	_ensure_peer_exists()
 	peer.create_client(ip_address, DEFAULT_PORT)
-	get_tree().set_network_peer(peer)
+	multiplayer.set_network_peer(peer)
 
 
 func _ready():
 	var _u
-	_u = get_tree().connect(
+	_u = multiplayer.connect(
 		"network_peer_connected", self, "_network_peer_connected"
 	)
-	_u = get_tree().connect(
+	_u = multiplayer.connect(
 		"network_peer_disconnected", self, "_network_peer_disconnected"
 	)
-	_u = get_tree().connect("connected_to_server", self, "_connected_to_server")
-	_u = get_tree().connect("server_disconnected", self, "_server_disconnected")
-	_u = get_tree().connect("connection_failed", self, "_connection_failed")
+	_u = multiplayer.connect("connected_to_server", self, "_connected_to_server")
+	_u = multiplayer.connect("server_disconnected", self, "_server_disconnected")
+	_u = multiplayer.connect("connection_failed", self, "_connection_failed")
 
 
 func _ensure_peer_exists():
@@ -66,7 +66,7 @@ func _network_peer_disconnected(id):
 
 func _connected_to_server():
 	print("Successfully connected to server")
-	_register_player(get_tree().get_network_unique_id(), info)
+	_register_player(multiplayer.get_network_unique_id(), info)
 
 
 func _connection_failed():
@@ -81,10 +81,10 @@ func _on_LineEdit_text_changed(new_text):
 	ip_address = new_text
 
 
-remote func _register_new_player(_info):
-	print("New player registered ", get_tree().get_rpc_sender_id())
-	_register_player(get_tree().get_rpc_sender_id(), _info)
-
-
 func _register_player(id, _info):
 	players_info.append(Utils.make_player_info_with_id(id, _info))
+
+
+remote func _register_new_player(_info):
+	print("New player registered ", multiplayer.get_rpc_sender_id())
+	_register_player(multiplayer.get_rpc_sender_id(), _info)
