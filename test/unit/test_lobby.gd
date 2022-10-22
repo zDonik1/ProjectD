@@ -1,118 +1,124 @@
-extends UnitTest
-
+extends GutTest
 
 class Utils:
-	static func make_lobby(tst_inst, peer = null):
+	static func make_lobby(tst_inst):
 		var lobby = tst_inst.partial_double(Lobby, tst_inst.DOUBLE_STRATEGY.FULL).new()
 		tst_inst.stub(lobby, "_ready").to_call_super()
-		lobby.peer = peer
 		return lobby
 
 
-const PLAYER_NAME = "Some player name"
-
-var lobby
-var peer
-
-var network_connection_params = ParameterFactory.named_parameters(
-	["signal", "receiver"],
-	[
-		["network_peer_connected", "_network_peer_connected"],
-		["network_peer_disconnected", "_network_peer_disconnected"],
-	]
-)
-
-var client_connection_params = ParameterFactory.named_parameters(
-	["signal", "receiver"],
-	[
-		["connected_to_server", "_connected_to_server"],
-		["server_disconnected", "_server_disconnected"],
-		["connection_failed", "_connection_failed"],
-	]
-)
-
-
-func before_each():
-	.before_each()
-	peer = autofree(FakeNetworkMultiplayerENet.new())
-	lobby = Utils.make_lobby(self)
-	lobby.custom_multiplayer = multiplayer_inst
-	add_child(lobby)
-
-
-func test_appropriate_receiver_called_when_network_signal_emitted_on_scene_tree(
-	params = use_parameters(network_connection_params)
-):
-	var id = 10
-	stub(lobby, params.receiver).to_do_nothing()
-
-	lobby.multiplayer.emit_signal(params.signal, id)
-
-	assert_called(lobby, params.receiver)
-
-
-func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
-	params = use_parameters(client_connection_params)
-):
-	stub(lobby, params.receiver).to_do_nothing()
-
-	lobby.multiplayer.emit_signal(params.signal)
-
-	assert_called(lobby, params.receiver)
-
-
-func test_peer_not_initialized_by_default():
-	assert_eq(lobby.peer, null)
-
-
-func test_info_name_initialized_to_Player():
-	assert_eq(lobby.info["name"], "Player")
-
-
-func test_has_peer_after_joining_server():
-	lobby.join_server()
-
-	assert_true(lobby.multiplayer.has_network_peer())
-
-
-func test_creating_server_intializes_players_info_with_self_info():
-	lobby.create_server()
-
-	assert_eq_deep(
-		lobby.players_info,
-		[
-			{
-				"id": lobby.multiplayer.get_network_unique_id(),
-				"info": lobby.info,
-			}
-		]
-	)
-
-
-func test_on_LineEdit_text_changed_sets_ip_address():
-	var text = "some text here"
-
-	lobby._on_LineEdit_text_changed(text)
-
-	assert_eq(lobby.ip_address, text)
-
-
-class TestLobbyWithDisconnectedPeer:
+class LobbyEnv:
 	extends UnitTest
 
-	var peer
 	var lobby
 
-	func _initialize_peer():
-		peer = partial_double(FakeNetworkMultiplayerENet).new()
+	func before_each():
+		.before_each()
+		lobby = Utils.make_lobby(self)
+		lobby.custom_multiplayer = multiplayer_inst
+		add_child(lobby)
+
+
+class LobbyEnvWithPeer:
+	extends LobbyEnv
+
+	var peer
 
 	func before_each():
 		.before_each()
 		peer = partial_double(FakeNetworkMultiplayerENet).new()
-		lobby = Utils.make_lobby(self, peer)
-		lobby.custom_multiplayer = multiplayer_inst
 		lobby.peer = peer
-		add_child(lobby)
+
+
+class LobbyEnvWithConnectedPeer:
+	extends LobbyEnvWithPeer
+
+	var self_id = 123
+
+	func before_each():
+		.before_each()
+		peer.self_id = self_id
+		peer.status_connected()
+		multiplayer_inst.network_peer = peer
+
+
+class TestLobby:
+	extends LobbyEnv
+
+	func test_peer_not_initialized_by_default():
+		assert_eq(lobby.peer, null)
+
+	func test_info_name_initialized_to_Player():
+		assert_eq(lobby.info["name"], "Player")
+
+	func test_has_peer_after_joining_server():
+		lobby.join_server()
+
+		assert_true(lobby.multiplayer.has_network_peer())
+
+	func test_creating_server_intializes_players_info_with_self_info():
+		lobby.create_server()
+
+		assert_eq_deep(
+			lobby.players_info,
+			[
+				{
+					"id": lobby.multiplayer.get_network_unique_id(),
+					"info": lobby.info,
+				}
+			]
+		)
+
+	func test_on_LineEdit_text_changed_sets_ip_address():
+		var text = "some text here"
+
+		lobby._on_LineEdit_text_changed(text)
+
+		assert_eq(lobby.ip_address, text)
+
+
+class TestLobbyReceivers:
+	extends LobbyEnv
+
+	var network_connection_params = ParameterFactory.named_parameters(
+		["signal", "receiver"],
+		[
+			["network_peer_connected", "_network_peer_connected"],
+			["network_peer_disconnected", "_network_peer_disconnected"],
+		]
+	)
+
+	var client_connection_params = ParameterFactory.named_parameters(
+		["signal", "receiver"],
+		[
+			["connected_to_server", "_connected_to_server"],
+			["server_disconnected", "_server_disconnected"],
+			["connection_failed", "_connection_failed"],
+		]
+	)
+
+	func test_appropriate_receiver_called_when_network_signal_emitted_on_scene_tree(
+		params = use_parameters(network_connection_params)
+	):
+		var id = 10
+		stub(lobby, params.receiver).to_do_nothing()
+
+		lobby.multiplayer.emit_signal(params.signal, id)
+
+		assert_called(lobby, params.receiver)
+
+	func test_appropriate_receiver_called_when_client_signal_emitted_on_scene_tree(
+		params = use_parameters(client_connection_params)
+	):
+		stub(lobby, params.receiver).to_do_nothing()
+
+		lobby.multiplayer.emit_signal(params.signal)
+
+		assert_called(lobby, params.receiver)
+
+
+class TestLobbyWithDisconnectedPeer:
+	extends LobbyEnvWithPeer	
 
 	func test_create_server_sets_server_network_peer_on_scene_tree():
 		lobby.create_server()
@@ -134,25 +140,7 @@ class TestLobbyWithDisconnectedPeer:
 
 
 class TestLobbyWithConnectedPeer:
-	extends UnitTest
-
-	var self_id = 123
-	var sender_id = 186
-	var peer
-	var lobby
-
-	func _initialize_peer():
-		peer = autofree(FakeNetworkMultiplayerENet.new())
-		peer.self_id = self_id
-		peer.status_connected()
-		multiplayer_inst.network_peer = peer
-
-	func before_each():
-		.before_each()
-		_initialize_peer()
-		lobby = Utils.make_lobby(self, peer)
-		lobby.custom_multiplayer = multiplayer_inst
-		add_child(lobby)
+	extends LobbyEnvWithConnectedPeer
 
 	func test_players_info_has_self_info_after_connecting_to_server():
 		lobby._connected_to_server()
@@ -167,6 +155,7 @@ class TestLobbyWithConnectedPeer:
 		)
 
 	func test_register_new_player_adds_self_info_to_players_info():
+		var sender_id = 186
 		lobby.custom_multiplayer.sender_id = sender_id
 
 		lobby._register_new_player(TestUtils.get_player_info())
@@ -182,9 +171,7 @@ class TestLobbyWithConnectedPeer:
 
 
 class TestLobbyWithRpcCalls:
-	extends TestLobbyWithConnectedPeer
-
-	const PLAYER_NAME = "Some player 123"
+	extends LobbyEnvWithConnectedPeer
 
 	func before_each():
 		stub(Lobby, "rpc_id").to_do_nothing().param_count(3)
