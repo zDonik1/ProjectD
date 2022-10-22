@@ -1,4 +1,4 @@
-extends GutTest
+extends UnitTest
 
 
 class Utils:
@@ -11,7 +11,6 @@ class Utils:
 
 const PLAYER_NAME = "Some player name"
 
-var test_utils
 var lobby
 var peer
 
@@ -33,15 +32,11 @@ var client_connection_params = ParameterFactory.named_parameters(
 )
 
 
-func before_all():
-	test_utils = TestUtils.new(self)
-
-
 func before_each():
-	test_utils.initialize_scene_tree_state()
+	.before_each()
 	peer = autofree(FakeNetworkMultiplayerENet.new())
 	lobby = Utils.make_lobby(self)
-	lobby.custom_multiplayer = test_utils.multiplayer
+	lobby.custom_multiplayer = multiplayer_inst
 	add_child(lobby)
 
 
@@ -103,23 +98,19 @@ func test_on_LineEdit_text_changed_sets_ip_address():
 
 
 class TestLobbyWithDisconnectedPeer:
-	extends GutTest
+	extends UnitTest
 
-	var test_utils
 	var peer
 	var lobby
 
 	func _initialize_peer():
 		peer = partial_double(FakeNetworkMultiplayerENet).new()
 
-	func before_all():
-		test_utils = TestUtils.new(self)
-
 	func before_each():
-		test_utils.initialize_scene_tree_state()
-		_initialize_peer()
+		.before_each()
+		peer = partial_double(FakeNetworkMultiplayerENet).new()
 		lobby = Utils.make_lobby(self, peer)
-		lobby.custom_multiplayer = test_utils.multiplayer
+		lobby.custom_multiplayer = multiplayer_inst
 		lobby.peer = peer
 		add_child(lobby)
 
@@ -143,11 +134,10 @@ class TestLobbyWithDisconnectedPeer:
 
 
 class TestLobbyWithConnectedPeer:
-	extends GutTest
+	extends UnitTest
 
 	var self_id = 123
 	var sender_id = 186
-	var test_utils
 	var peer
 	var lobby
 
@@ -155,16 +145,13 @@ class TestLobbyWithConnectedPeer:
 		peer = autofree(FakeNetworkMultiplayerENet.new())
 		peer.self_id = self_id
 		peer.status_connected()
-		test_utils.multiplayer.network_peer = peer
-
-	func before_all():
-		test_utils = TestUtils.new(self)
+		multiplayer_inst.network_peer = peer
 
 	func before_each():
-		test_utils.initialize_scene_tree_state()
+		.before_each()
 		_initialize_peer()
 		lobby = Utils.make_lobby(self, peer)
-		lobby.custom_multiplayer = test_utils.multiplayer
+		lobby.custom_multiplayer = multiplayer_inst
 		add_child(lobby)
 
 	func test_players_info_has_self_info_after_connecting_to_server():
