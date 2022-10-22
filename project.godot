@@ -9,10 +9,25 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Reference",
+"class": "Appender",
+"language": "GDScript",
+"path": "res://addons/gs_logger/appender.gd"
+}, {
+"base": "Appender",
+"class": "ConsoleAppender",
+"language": "GDScript",
+"path": "res://addons/gs_logger/appenders/console_appender.gd"
+}, {
 "base": "NetworkedMultiplayerCustom",
 "class": "FakeNetworkMultiplayerENet",
 "language": "GDScript",
 "path": "res://test/mock/fake_network_peer.gd"
+}, {
+"base": "Appender",
+"class": "FileAppender",
+"language": "GDScript",
+"path": "res://addons/gs_logger/appenders/file_appender.gd"
 }, {
 "base": "Reference",
 "class": "GutHookScript",
@@ -24,10 +39,30 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://addons/gut/test.gd"
 }, {
+"base": "Layout",
+"class": "HtmlLayout",
+"language": "GDScript",
+"path": "res://addons/gs_logger/layouts/html_layout.gd"
+}, {
+"base": "Reference",
+"class": "Layout",
+"language": "GDScript",
+"path": "res://addons/gs_logger/layout.gd"
+}, {
 "base": "Node",
 "class": "Lobby",
 "language": "GDScript",
 "path": "res://scripts/lobby.gd"
+}, {
+"base": "Reference",
+"class": "Message",
+"language": "GDScript",
+"path": "res://addons/gs_logger/message.gd"
+}, {
+"base": "Layout",
+"class": "PatternLayout",
+"language": "GDScript",
+"path": "res://addons/gs_logger/layouts/pattern_layout.gd"
 }, {
 "base": "Node",
 "class": "SubSceneTree",
@@ -44,19 +79,32 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://test/unit_test.gd"
 }, {
+"base": "Reference",
+"class": "Utils",
+"language": "GDScript",
+"path": "res://addons/gs_logger/utils.gd"
+}, {
 "base": "Control",
 "class": "VirtualJoystick",
 "language": "GDScript",
 "path": "res://3rd/joystick/virtual_joystick.gd"
 } ]
 _global_script_class_icons={
+"Appender": "",
+"ConsoleAppender": "",
 "FakeNetworkMultiplayerENet": "",
+"FileAppender": "",
 "GutHookScript": "",
 "GutTest": "",
+"HtmlLayout": "",
+"Layout": "",
 "Lobby": "",
+"Message": "",
+"PatternLayout": "",
 "SubSceneTree": "",
 "TestUtils": "",
 "UnitTest": "",
+"Utils": "",
 "VirtualJoystick": ""
 }
 
@@ -65,6 +113,10 @@ _global_script_class_icons={
 config/name="DungeonCrawler"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+Logger="*res://addons/gs_logger/logger.gd"
 
 [debug]
 
@@ -81,7 +133,11 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/gut/plugin.cfg", "res://addons/multirun/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/gs_logger/plugin.cfg", "res://addons/gut/plugin.cfg", "res://addons/multirun/plugin.cfg" )
+
+[global]
+
+log=false
 
 [input]
 
