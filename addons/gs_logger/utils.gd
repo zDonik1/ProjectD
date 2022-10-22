@@ -1,4 +1,5 @@
 class_name Utils
+
 extends Reference
 
 const LOG_LEVEL_ALL = 999

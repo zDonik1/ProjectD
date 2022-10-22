@@ -6,11 +6,11 @@ const MAX_CLIENTS = 3
 var peer = null
 var ip_address = "127.0.0.1"
 
-var info = Utils.make_info_with_name("Player")
+var info = LobbyUtils.make_info_with_name("Player")
 var players_info = []
 
 
-class Utils:
+class LobbyUtils:
 	static func make_player_info_with_id(_id, _info):
 		return {"id": _id, "info": _info}
 
@@ -23,7 +23,7 @@ func create_server():
 	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	multiplayer.set_network_peer(peer)
 	players_info = [
-		Utils.make_player_info_with_id(multiplayer.get_network_unique_id(), info)
+		LobbyUtils.make_player_info_with_id(multiplayer.get_network_unique_id(), info)
 	]
 
 
@@ -56,25 +56,25 @@ func _make_peer():
 
 
 func _network_peer_connected(id):
-	print("Peer connected with id ", id)
+	Logger.info("Peer connected with id {}".format([id], "{}"), "Lobby")
 	rpc_id(id, "_register_new_player", info)
 
 
 func _network_peer_disconnected(id):
-	print("Peer disconnected with id ", id)
+	Logger.info("Peer disconnected with id {}".format([id], "{}"), "Lobby")
 
 
 func _connected_to_server():
-	print("Successfully connected to server")
+	Logger.info("Successfully connected to server", "Lobby")
 	_register_player(multiplayer.get_network_unique_id(), info)
 
 
 func _connection_failed():
-	print("Connection failed")
+	Logger.info("Connection failed", "Lobby")
 
 
 func _server_disconnected():
-	print("Disconnected from the server")
+	Logger.info("Disconnected from the server", "Lobby")
 
 
 func _on_LineEdit_text_changed(new_text):
@@ -82,9 +82,8 @@ func _on_LineEdit_text_changed(new_text):
 
 
 func _register_player(id, _info):
-	players_info.append(Utils.make_player_info_with_id(id, _info))
+	players_info.append(LobbyUtils.make_player_info_with_id(id, _info))
 
 
 remote func _register_new_player(_info):
-	print("New player registered ", multiplayer.get_rpc_sender_id())
 	_register_player(multiplayer.get_rpc_sender_id(), _info)

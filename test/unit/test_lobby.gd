@@ -1,6 +1,9 @@
 extends GutTest
 
-class Utils:
+func before_all():
+	Logger.set_logger_level(Logger.LOG_LEVEL_WARN)
+
+class LobbyUtils:
 	static func make_lobby(tst_inst):
 		var lobby = tst_inst.partial_double(Lobby, tst_inst.DOUBLE_STRATEGY.FULL).new()
 		tst_inst.stub(lobby, "_ready").to_call_super()
@@ -14,7 +17,7 @@ class LobbyEnv:
 
 	func before_each():
 		.before_each()
-		lobby = Utils.make_lobby(self)
+		lobby = LobbyUtils.make_lobby(self)
 		lobby.custom_multiplayer = multiplayer_inst
 		add_child(lobby)
 
@@ -148,8 +151,8 @@ class TestLobbyWithConnectedPeer:
 		assert_eq_deep(
 			lobby.players_info,
 			[
-				Lobby.Utils.make_player_info_with_id(
-					self_id, Lobby.Utils.make_info_with_name("Player")
+				Lobby.LobbyUtils.make_player_info_with_id(
+					self_id, Lobby.LobbyUtils.make_info_with_name("Player")
 				)
 			]
 		)
@@ -163,7 +166,7 @@ class TestLobbyWithConnectedPeer:
 		assert_eq_deep(
 			lobby.players_info,
 			[
-				Lobby.Utils.make_player_info_with_id(
+				Lobby.LobbyUtils.make_player_info_with_id(
 					sender_id, TestUtils.get_player_info()
 				)
 			]

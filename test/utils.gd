@@ -2,16 +2,16 @@ class_name TestUtils
 
 
 static func get_player_info():
-	return Lobby.Utils.make_info_with_name("Some player name")
+	return Lobby.LobbyUtils.make_info_with_name("Some player name")
 
 
 static func get_players_info():
 	return [
 		Lobby.Utils.make_player_info_with_id(
-			1, Lobby.Utils.make_info_with_name("Player 1")
+			1, Lobby.LobbyUtils.make_info_with_name("Player 1")
 		),
 		Lobby.Utils.make_player_info_with_id(
-			2, Lobby.Utils.make_info_with_name("Player 2")
+			2, Lobby.LobbyUtils.make_info_with_name("Player 2")
 		)
 	]
 
