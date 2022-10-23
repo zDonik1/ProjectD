@@ -1,0 +1,29 @@
+[gd_scene format=2]
+
+[node name="main" type="CenterContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+margin_left = 463.0
+margin_top = 264.0
+margin_right = 560.0
+margin_bottom = 336.0
+alignment = 1
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer"]
+margin_right = 97.0
+margin_bottom = 24.0
+text = "127.0.0.1"
+
+[node name="JoinServer" type="Button" parent="VBoxContainer"]
+margin_top = 28.0
+margin_right = 97.0
+margin_bottom = 48.0
+text = "Join server"
+
+[node name="CreateServer" type="Button" parent="VBoxContainer"]
+margin_top = 52.0
+margin_right = 97.0
+margin_bottom = 72.0
+text = "Create server"
