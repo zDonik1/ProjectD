@@ -1,9 +1,5 @@
 extends GutTest
 
-func before_all():
-	Logger.set_logger_level(Logger.LOG_LEVEL_WARN)
-
-
 class LobbyEnv:
 	extends UnitTest
 

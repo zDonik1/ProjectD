@@ -10,10 +10,6 @@ func make_lobby_in_env_from_info(info):
 	return lobby
 
 
-func before_all():
-	Logger.set_logger_level(Logger.LOG_LEVEL_WARN)
-
-
 func test_connecting_to_server_properly_initializes_info_on_all_peers():
 	var infos = {
 		"server": Lobby.LobbyUtils.make_info_with_name("Server"),
