@@ -3,12 +3,6 @@ extends GutTest
 func before_all():
 	Logger.set_logger_level(Logger.LOG_LEVEL_WARN)
 
-class LobbyUtils:
-	static func make_lobby(tst_inst):
-		var lobby = tst_inst.partial_double(Lobby, tst_inst.DOUBLE_STRATEGY.FULL).new()
-		tst_inst.stub(lobby, "_ready").to_call_super()
-		return lobby
-
 
 class LobbyEnv:
 	extends UnitTest
@@ -17,7 +11,9 @@ class LobbyEnv:
 
 	func before_each():
 		.before_each()
-		lobby = LobbyUtils.make_lobby(self)
+		lobby = partial_double(Lobby, DOUBLE_STRATEGY.FULL).new()
+		stub(lobby, "_ready").to_call_super()
+		stub(lobby, "_make_peer").to_return(FakeNetworkMultiplayerENet.new())
 		lobby.custom_multiplayer = multiplayer_inst
 		add_child(lobby)
 
