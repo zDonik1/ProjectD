@@ -8,4 +8,6 @@ func _ready():
 
 
 func _create_server_button_pressed():
-	pass
+	var lobby = preload("res://scenes/lobby.tscn").instance()
+	lobby.name = "LobbyUI"
+	get_parent().add_child(lobby)
