@@ -32,10 +32,6 @@ func test_create_server_button_click_creates_server_and_opens_lobby_ui():
 		root.has_node("LobbyUI"),
 		"check that LobbyUI scene was created under main node"
 	)
-	assert_false(
-		root.has_node("MainMenu"),
-		"check that MainMenu scene was deleted under main node"
-	)
 
 
 func test_join_server_button_click_joins_server_and_shows_connecting_message():

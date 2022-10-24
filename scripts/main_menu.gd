@@ -19,8 +19,6 @@ func _create_server_button_pressed():
 
 	get_node("../Lobby").create_server()
 
-	queue_free()
-
 
 func _join_server_button_pressed():
 	var message = preload("res://scenes/screen_message.tscn").instance()
