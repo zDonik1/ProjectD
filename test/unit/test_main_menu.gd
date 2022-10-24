@@ -20,6 +20,9 @@ func before_each():
 func after_each():
 	if has_node("LobbyUI"):
 		$LobbyUI.free()
+	
+	if has_node("ConnectingMessage"):
+		$ConnectingMessage.free()
 
 
 func test_connects_create_server_button_pressed_to_receiver():
@@ -56,3 +59,12 @@ func test_connects_join_server_button_pressed_to_receiver():
 	main_menu.get_node("ButtonList/JoinServer").emit_signal("pressed")
 
 	assert_called(main_menu, "_join_server_button_pressed")
+
+
+func test_pressing_join_server_button_creates_connecting_message():
+	main_menu._join_server_button_pressed()
+
+	assert_true(
+		main_menu.get_parent().has_node("ConnectingMessage"),
+		"check that ConnectingMessage node was created"
+	)

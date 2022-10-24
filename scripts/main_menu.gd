@@ -23,4 +23,6 @@ func _create_server_button_pressed():
 
 
 func _join_server_button_pressed():
-	pass
+	var message = preload("res://scenes/screen_message.tscn").instance()
+	message.name = "ConnectingMessage"
+	get_parent().add_child(message)
