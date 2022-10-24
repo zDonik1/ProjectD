@@ -2,7 +2,7 @@ extends GutTest
 
 
 func make_lobby_in_env_from_info(info):
-	var lobby = autofree(Lobby.new())
+	var lobby = Lobby.new()
 	lobby.info = info
 	lobby.name = "Lobby"
 	var sub_st = add_child_autofree(SubSceneTree.new())

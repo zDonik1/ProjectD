@@ -1,4 +1,5 @@
-class_name Lobby extends Node
+class_name Lobby
+extends Node
 
 const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
@@ -23,7 +24,9 @@ func create_server():
 	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	multiplayer.set_network_peer(peer)
 	players_info = [
-		LobbyUtils.make_player_info_with_id(multiplayer.get_network_unique_id(), info)
+		LobbyUtils.make_player_info_with_id(
+			multiplayer.get_network_unique_id(), info
+		)
 	]
 
 
@@ -41,8 +44,12 @@ func _ready():
 	_u = multiplayer.connect(
 		"network_peer_disconnected", self, "_network_peer_disconnected"
 	)
-	_u = multiplayer.connect("connected_to_server", self, "_connected_to_server")
-	_u = multiplayer.connect("server_disconnected", self, "_server_disconnected")
+	_u = multiplayer.connect(
+		"connected_to_server", self, "_connected_to_server"
+	)
+	_u = multiplayer.connect(
+		"server_disconnected", self, "_server_disconnected"
+	)
 	_u = multiplayer.connect("connection_failed", self, "_connection_failed")
 
 
@@ -75,10 +82,6 @@ func _connection_failed():
 
 func _server_disconnected():
 	Logger.info("Disconnected from the server", "Lobby")
-
-
-func _on_LineEdit_text_changed(new_text):
-	ip_address = new_text
 
 
 func _register_player(id, _info):

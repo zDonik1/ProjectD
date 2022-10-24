@@ -18,3 +18,8 @@ func _process(delta):
 
 func _exit_tree():
 	st.finish()
+
+
+func _notification(what):
+	if what == NOTIFICATION_PREDELETE:
+		st.free()

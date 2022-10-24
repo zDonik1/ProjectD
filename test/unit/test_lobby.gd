@@ -64,13 +64,6 @@ class TestLobby:
 			]
 		)
 
-	func test_on_LineEdit_text_changed_sets_ip_address():
-		var text = "some text here"
-
-		lobby._on_LineEdit_text_changed(text)
-
-		assert_eq(lobby.ip_address, text)
-
 
 class TestLobbyReceivers:
 	extends LobbyEnv
