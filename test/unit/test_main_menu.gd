@@ -39,7 +39,7 @@ func test_pressing_create_server_button_creates_lobby():
 
 func test_pressing_create_server_button_deletes_main_menu():
 	main_menu._create_server_button_pressed()
-
+	
 	assert_true(
 		main_menu.is_queued_for_deletion(),
 		"check that MainMenu is about to be deleted"
@@ -50,3 +50,9 @@ func test_pressing_create_server_button_creates_server_in_lobby():
 	main_menu._create_server_button_pressed()
 
 	assert_called(lobby, "create_server")
+
+
+func test_connects_join_server_button_pressed_to_receiver():
+	main_menu.get_node("ButtonList/JoinServer").emit_signal("pressed")
+
+	assert_called(main_menu, "_join_server_button_pressed")
