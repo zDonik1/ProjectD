@@ -25,6 +25,7 @@ func _create_server_button_pressed():
 func _join_server_button_pressed():
 	var message = preload("res://scenes/screen_message.tscn").instance()
 	message.name = "ConnectingMessage"
+	message.message = "Connecting to server..."
 	get_parent().add_child(message)
 
 	get_node("../Lobby").join_server()

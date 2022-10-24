@@ -70,6 +70,10 @@ func test_pressing_join_server_button_creates_connecting_message():
 		main_menu.get_parent().has_node("ConnectingMessage"),
 		"check that ConnectingMessage node was created"
 	)
+	assert_eq(
+		main_menu.get_parent().get_node("ConnectingMessage").message,
+		"Connecting to server..."
+	)
 
 
 func test_pressing_join_server_button_joins_server_in_lobby():
