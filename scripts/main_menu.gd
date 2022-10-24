@@ -13,9 +13,9 @@ func _ready():
 
 
 func _create_server_button_pressed():
-	var lobby = preload("res://scenes/lobby.tscn").instance()
-	lobby.name = "LobbyUI"
-	get_parent().add_child(lobby)
+	var lobby_ui = preload("res://scenes/lobby_ui.tscn").instance()
+	lobby_ui.name = "LobbyUI"
+	get_parent().add_child(lobby_ui)
 
 	get_node("../Lobby").create_server()
 
