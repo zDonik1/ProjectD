@@ -1,5 +1,6 @@
 extends Control
 
+var coordinator: Coordinator
 var lobby: Lobby
 
 
