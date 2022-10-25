@@ -30,7 +30,7 @@ class TestLobbyUI:
 	extends LobbyUIEnv
 
 	func test_setting_names_to_list_with_existing_items_overrides_it():
-		var names = [
+		var names := [
 			"My first item", "This is a second item", "Here is a third one"
 		]
 		lobby_ui.add_item("Some other item")
@@ -38,6 +38,16 @@ class TestLobbyUI:
 		lobby_ui.set_item_names(names)
 
 		assert_eq(lobby_ui.get_item_names(), names)
+
+
+	func test_player_name_added_to_list_on_add_player():
+		var names := ["First player name", "Second player name"]
+		lobby_ui._add_player(Lobby.LobbyUtils.make_info_with_name(names[0]))
+
+		lobby_ui._add_player(Lobby.LobbyUtils.make_info_with_name(names[1]))
+
+		assert_eq(lobby_ui.get_item_names(), names)
+		
 
 
 class TestLobbyUIWithLobby:

@@ -23,7 +23,7 @@ func set_item_names(names: Array):
 
 
 func _add_player(info: Dictionary):
-	pass
+	add_item(info.name)
 
 
 func _remove_player(index: int):
