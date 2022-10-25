@@ -17,24 +17,18 @@ class LobbyUIEnv:
 		stub(lobby_ui, "_ready").to_call_super()
 
 
-class LobbyUIEnvWithLobby:
+class LobbyUIEnvWithLobbyAndSetNames:
 	extends LobbyUIEnv
 
 	var lobby: Lobby
 
 	func before_each():
 		.before_each()
+		lobby_ui.set_item_names(names)
+
 		lobby = autofree(Lobby.new())
 		lobby_ui.lobby = lobby
 		add_child(lobby_ui)
-
-
-class LobbyUIEnvWithSetNames:
-	extends LobbyUIEnv
-
-	func before_each():
-		.before_each()
-		lobby_ui.set_item_names(names)
 
 
 class TestLobbyUI:
@@ -48,39 +42,26 @@ class TestLobbyUI:
 		assert_eq(lobby_ui.get_item_names(), names)
 
 
-class TestLobbyUIWithLobby:
-	extends LobbyUIEnvWithLobby
+class TestLobbyUIWithLobbyAndSetNames:
+	extends LobbyUIEnvWithLobbyAndSetNames
 
-	func test_add_player_receiver_connected_to_lobby_peer_added_on_ready():
-		lobby.emit_signal("peer_added", TestUtils.get_player_info())
-
-		assert_called(lobby_ui, "_add_player", [TestUtils.get_player_info()])
-
-	func test_remove_player_receiver_connected_to_lobby_peer_removed_on_ready():
-		var index = 2
-
-		lobby.emit_signal("peer_removed", index)
-
-		assert_called(lobby_ui, "_remove_player", [index])
-
-
-class TestLobbyUIWithSetNames:
-	extends LobbyUIEnvWithSetNames
-
-	const new_name := "Some new player"
-
-	func test_player_name_added_to_list_on_add_player():
+	func test_player_name_added_when_lobby_peer_added_emitted():
+		var new_name := "Some new player"
 		var all_names := names + [new_name]
 
-		lobby_ui._add_player(Lobby.LobbyUtils.make_info_with_name(new_name))
+		lobby.emit_signal(
+			"peer_added", Lobby.LobbyUtils.make_info_with_name(new_name)
+		)
 
+		print(lobby_ui.get_item_names())
+		print(all_names)
 		assert_eq(lobby_ui.get_item_names(), all_names)
 
-	func test_player_name_removed_from_list_on_remove_player():
+	func test_player_name_removed_when_lobby_peer_removed_emitted():
 		var index = 1
-		var all_names := names
+		var all_names := names.duplicate()
 		all_names.remove(index)
 
-		lobby_ui._remove_player(index)
-
+		lobby.emit_signal("peer_removed", index)
+		
 		assert_eq(lobby_ui.get_item_names(), all_names)
