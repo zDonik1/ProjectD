@@ -15,18 +15,30 @@ class CoordinatorEnv:
 		free_node_if_exists("ConnectingMessage")
 
 
+class CoordinatorEnvWithMainMenu:
+	extends CoordinatorEnv
+
+	func before_each():
+		.before_each()
+		coordinator.add_main_menu()
+
+
 class TestCoordinator:
 	extends CoordinatorEnv
 
-	func test_creates_main_menu_as_sibling_on_ready():
+	func test_creates_main_menu_as_sibling_on_add_main_menu():
+		coordinator.add_main_menu()
+
 		assert_true(has_node("MainMenu"), "check MainMenu was created")
 
-	func test_initializes_main_menu_coordinator_with_self_on_ready():
-		assert_eq(get_node("MainMenu").coordinator, coordinator)
+	func test_initializes_main_menu_coordinator_with_self_on_add_main_menu():
+		coordinator.add_main_menu()
+
+		assert_eq($MainMenu.coordinator, coordinator)
 
 
 class TestCoordinatorWithLobbyUI:
-	extends CoordinatorEnv
+	extends CoordinatorEnvWithMainMenu
 
 	var lobby: Node
 
@@ -36,21 +48,21 @@ class TestCoordinatorWithLobbyUI:
 		lobby.name = "Lobby"
 
 	func test_creates_lobby_ui_as_sibling_when_main_menu_create_server_pressed_emits():
-		get_node("MainMenu").emit_signal("create_server_pressed")
+		$MainMenu.emit_signal("create_server_pressed")
 
 		assert_true(has_node("LobbyUI"), "check LobbyUI was created")
 
 	func test_initializes_lobby_ui_with_lobby():
-		get_node("MainMenu").emit_signal("create_server_pressed")
+		$MainMenu.emit_signal("create_server_pressed")
 
-		assert_eq(get_node("LobbyUI").lobby, lobby)
+		assert_eq($LobbyUI.lobby, lobby)
 
 
 class TestCoordinatorWithConnectingMessage:
-	extends CoordinatorEnv
+	extends CoordinatorEnvWithMainMenu
 
 	func test_creates_connecting_message_as_sibling_when_main_menu_join_server_pressed_emits():
-		get_node("MainMenu").emit_signal("join_server_pressed")
+		$MainMenu.emit_signal("join_server_pressed")
 
 		assert_true(
 			has_node("ConnectingMessage"), "check ConnectingMessage was created"

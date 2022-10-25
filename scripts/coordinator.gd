@@ -2,13 +2,15 @@ class_name Coordinator
 extends Node
 
 
-func _ready():
+func add_main_menu():
 	var main_menu: Node = load("res://scenes/main_menu.tscn").instance()
 	main_menu.name = "MainMenu"
 	main_menu.coordinator = self
 	var _u: int
 	_u = main_menu.connect("create_server_pressed", self, "_add_lobby_ui")
-	_u = main_menu.connect("join_server_pressed", self, "_add_connecting_message")
+	_u = main_menu.connect(
+		"join_server_pressed", self, "_add_connecting_message"
+	)
 	get_parent().add_child(main_menu)
 
 
