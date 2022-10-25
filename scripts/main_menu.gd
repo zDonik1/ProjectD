@@ -1,5 +1,8 @@
 extends Control
 
+signal create_server_pressed
+signal join_server_pressed
+
 var coordinator: Coordinator
 var lobby: Lobby
 
