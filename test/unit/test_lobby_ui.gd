@@ -28,3 +28,14 @@ func test_add_player_receiver_connected_to_lobby_peer_added_on_ready():
 	lobby.emit_signal("peer_added", TestUtils.get_player_info())
 
 	assert_called(lobby_ui, "_add_player", [TestUtils.get_player_info()])
+
+
+func test_remove_player_receiver_connected_to_lobby_peer_removed_on_ready():
+	var index = 2
+	var lobby = autofree(Lobby.new())
+	lobby_ui.lobby = lobby
+	add_child(lobby_ui)
+
+	lobby.emit_signal("peer_removed", index)
+
+	assert_called(lobby_ui, "_remove_player", [index])
