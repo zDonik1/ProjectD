@@ -7,17 +7,20 @@ func add_main_menu():
 	main_menu.name = "MainMenu"
 	main_menu.coordinator = self
 	var _u: int
-	_u = main_menu.connect("create_server_pressed", self, "_add_lobby_ui")
+	_u = main_menu.connect("create_server_pressed", self, "_on_create_server_pressed")
 	_u = main_menu.connect(
 		"join_server_pressed", self, "_add_connecting_message"
 	)
 	get_parent().add_child(main_menu)
 
 
-func _add_lobby_ui():
+func _on_create_server_pressed():
+	var lobby := get_node("../Lobby")
+	lobby.create_server()
+
 	var lobby_ui: Node = load("res://scenes/lobby_ui.tscn").instance()
 	lobby_ui.name = "LobbyUI"
-	lobby_ui.lobby = get_node("../Lobby")
+	lobby_ui.lobby = lobby
 	get_parent().add_child(lobby_ui)
 
 
