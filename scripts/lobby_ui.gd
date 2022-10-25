@@ -27,4 +27,4 @@ func _add_player(info: Dictionary):
 
 
 func _remove_player(index: int):
-	pass
+	remove_item(index)
