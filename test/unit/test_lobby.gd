@@ -1,5 +1,6 @@
 extends GutTest
 
+
 class LobbyEnv:
 	extends UnitTest
 
@@ -64,6 +65,32 @@ class TestLobby:
 			]
 		)
 
+	func test_peer_added_signal_emitted_when_new_player_registered():
+		watch_signals(lobby)
+
+		lobby._register_new_player(TestUtils.get_player_info())
+
+		assert_signal_emitted_with_parameters(
+			lobby, "peer_added", [TestUtils.get_player_info()]
+		)
+
+	func test_peer_removed_signal_emmitted_when_player_disconnects():
+		var id = 10
+		var index = 1
+		lobby.players_info = [
+			Lobby.LobbyUtils.make_player_info_with_id(
+				1, TestUtils.get_player_info()
+			),
+			Lobby.LobbyUtils.make_player_info_with_id(
+				id, TestUtils.get_player_info()
+			)
+		]
+		watch_signals(lobby)
+
+		lobby._network_peer_disconnected(id)
+
+		assert_signal_emitted_with_parameters(lobby, "peer_removed", [index])
+
 
 class TestLobbyReceivers:
 	extends LobbyEnv
@@ -106,7 +133,7 @@ class TestLobbyReceivers:
 
 
 class TestLobbyWithDisconnectedPeer:
-	extends LobbyEnvWithPeer	
+	extends LobbyEnvWithPeer
 
 	func test_create_server_sets_server_network_peer_on_scene_tree():
 		lobby.create_server()
