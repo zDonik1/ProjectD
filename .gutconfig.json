@@ -7,5 +7,5 @@
     "log_level":2,
     "should_exit":true,
     "should_maximize":true,
-    "post_run_script":"res://test/check_risky.gd"
+    "post_run_script":"res://test/post_hook.gd"
 }
