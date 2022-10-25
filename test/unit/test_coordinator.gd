@@ -10,11 +10,9 @@ class CoordinatorEnv:
 		coordinator = add_child_autofree(Coordinator.new())
 
 	func after_each():
-		if has_node("MainMenu"):
-			get_node("MainMenu").free()
-
-		if has_node("LobbyUI"):
-			get_node("LobbyUI").free()
+		free_node_if_exists("MainMenu")
+		free_node_if_exists("LobbyUI")
+		free_node_if_exists("ConnectingMessage")
 
 
 class TestCoordinator:
@@ -46,3 +44,14 @@ class TestCoordinatorWithLobbyUI:
 		get_node("MainMenu").emit_signal("create_server_pressed")
 
 		assert_eq(get_node("LobbyUI").lobby, lobby)
+
+
+class TestCoordinatorWithConnectingMessage:
+	extends CoordinatorEnv
+
+	func test_creates_connecting_message_as_sibling_when_main_menu_join_server_pressed_emits():
+		get_node("MainMenu").emit_signal("join_server_pressed")
+
+		assert_true(
+			has_node("ConnectingMessage"), "check ConnectingMessage was created"
+		)

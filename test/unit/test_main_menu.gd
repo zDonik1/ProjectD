@@ -19,11 +19,8 @@ func before_each():
 
 
 func after_each():
-	if has_node("LobbyUI"):
-		$LobbyUI.free()
-
-	if has_node("ConnectingMessage"):
-		$ConnectingMessage.free()
+	free_node_if_exists("LobbyUI")
+	free_node_if_exists("ConnectingMessage")
 
 
 func test_connects_create_server_button_pressed_to_receiver():
