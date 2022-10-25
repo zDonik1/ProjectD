@@ -8,13 +8,12 @@ func before_each():
 	.before_each()
 
 	lobby = double(Lobby).new()
-	lobby.name = "Lobby"
 	stub(lobby, "_ready").to_do_nothing()
 	stub(lobby, "create_server").to_do_nothing()
 	stub(lobby, "join_server").to_do_nothing()
-	add_child(lobby)
 
 	main_menu = partial_double("res://scenes/main_menu.tscn").instance()
+	main_menu.lobby = lobby
 	stub(main_menu, "_ready").to_call_super()
 	add_child(main_menu)
 

@@ -1,5 +1,7 @@
 extends Control
 
+var lobby: Lobby
+
 
 func _ready():
 	var _u
@@ -15,9 +17,10 @@ func _ready():
 func _create_server_button_pressed():
 	var lobby_ui = preload("res://scenes/lobby_ui.tscn").instance()
 	lobby_ui.name = "LobbyUI"
+	lobby_ui.lobby = lobby
 	get_parent().add_child(lobby_ui)
 
-	get_node("../Lobby").create_server()
+	lobby.create_server()
 
 
 func _join_server_button_pressed():
@@ -26,4 +29,4 @@ func _join_server_button_pressed():
 	message.message = "Connecting to server..."
 	get_parent().add_child(message)
 
-	get_node("../Lobby").join_server()
+	lobby.join_server()
