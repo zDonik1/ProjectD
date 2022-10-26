@@ -1,11 +1,11 @@
-extends GutTest
+extends IntegTest
 
 
 func make_lobby_in_env_from_info(info):
 	var lobby = Lobby.new()
 	lobby.info = info
 	lobby.name = "Lobby"
-	var sub_st = add_child_autofree(SubSceneTree.new())
+	var sub_st = add_sub_scene_tree_as_child()
 	sub_st.st.root.add_child(lobby)
 	return lobby
 
