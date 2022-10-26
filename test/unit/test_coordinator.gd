@@ -67,6 +67,11 @@ class TestCoordinatorWithMainMenuAndLobby:
 			has_node("ConnectingMessage"), "check ConnectingMessage was created"
 		)
 
+	func test_initializes_connecting_message_with_message_when_main_menu_joined_server_pressed_emits():
+		$MainMenu.emit_signal("join_server_pressed")
+
+		assert_eq($ConnectingMessage.message, "Connecting to server...")
+
 	func test_calls_join_server_on_lobby_when_main_menu_join_server_pressed_emits():
 		$MainMenu.emit_signal("join_server_pressed")
 
