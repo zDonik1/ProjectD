@@ -7,6 +7,7 @@ class CoordinatorEnv:
 	var coordinator: Coordinator
 
 	func before_each():
+		.before_each()
 		coordinator = add_child_autofree(Coordinator.new())
 
 	func after_each():
@@ -15,12 +16,21 @@ class CoordinatorEnv:
 		free_node_if_exists("ConnectingMessage")
 
 
-class CoordinatorEnvWithMainMenu:
+class CoordinatorEnvWithMainMenuAndLobby:
 	extends CoordinatorEnv
+
+	var lobby: Lobby
 
 	func before_each():
 		.before_each()
 		coordinator.add_main_menu()
+
+		lobby = double(Lobby).new()
+		lobby.name = "Lobby"
+		stub(lobby, "_ready").to_do_nothing()
+		stub(lobby, "create_server").to_do_nothing()
+		stub(lobby, "join_server").to_do_nothing()
+		add_child(lobby)
 
 
 class TestCoordinator:
@@ -31,35 +41,9 @@ class TestCoordinator:
 
 		assert_true(has_node("MainMenu"), "check MainMenu was created")
 
-	func test_initializes_main_menu_coordinator_with_self_on_add_main_menu():
-		coordinator.add_main_menu()
-
-		assert_eq($MainMenu.coordinator, coordinator)
-
-
-class TestCoordinatorWithMainMenu:
-	extends CoordinatorEnvWithMainMenu
-
-	func test_creates_connecting_message_as_sibling_when_main_menu_join_server_pressed_emits():
-		$MainMenu.emit_signal("join_server_pressed")
-
-		assert_true(
-			has_node("ConnectingMessage"), "check ConnectingMessage was created"
-		)
-
 
 class TestCoordinatorWithMainMenuAndLobby:
-	extends CoordinatorEnvWithMainMenu
-
-	var lobby: Lobby
-
-	func before_each():
-		.before_each()
-		lobby = double(Lobby).new()
-		lobby.name = "Lobby"
-		stub(lobby, "_ready").to_do_nothing()
-		stub(lobby, "create_server").to_do_nothing()
-		add_child(lobby)
+	extends CoordinatorEnvWithMainMenuAndLobby
 
 	func test_creates_lobby_ui_as_sibling_when_main_menu_create_server_pressed_emits():
 		$MainMenu.emit_signal("create_server_pressed")
@@ -75,3 +59,15 @@ class TestCoordinatorWithMainMenuAndLobby:
 		$MainMenu.emit_signal("create_server_pressed")
 
 		assert_called(lobby, "create_server")
+
+	func test_creates_connecting_message_as_sibling_when_main_menu_join_server_pressed_emits():
+		$MainMenu.emit_signal("join_server_pressed")
+
+		assert_true(
+			has_node("ConnectingMessage"), "check ConnectingMessage was created"
+		)
+
+	func test_calls_join_server_on_lobby_when_main_menu_join_server_pressed_emits():
+		$MainMenu.emit_signal("join_server_pressed")
+
+		assert_called(lobby, "join_server")

@@ -3,8 +3,6 @@ extends Control
 signal create_server_pressed
 signal join_server_pressed
 
-var coordinator: Coordinator
-
 
 func _ready():
 	var _u: int

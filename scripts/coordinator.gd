@@ -1,30 +1,47 @@
 class_name Coordinator
 extends Node
 
+const MainMenu := preload("res://scripts/main_menu.gd")
+
+var _node_being_added: Node
+
 
 func add_main_menu():
-	var main_menu: Node = load("res://scenes/main_menu.tscn").instance()
-	main_menu.name = "MainMenu"
-	main_menu.coordinator = self
-	var _u: int
-	_u = main_menu.connect("create_server_pressed", self, "_on_create_server_pressed")
-	_u = main_menu.connect(
-		"join_server_pressed", self, "_add_connecting_message"
+	var coro = _add_control_node_to_parent(
+		"res://scenes/main_menu.tscn", "MainMenu"
 	)
-	get_parent().add_child(main_menu)
+	var _u: int
+	_u = _node_being_added.connect(
+		"create_server_pressed", self, "_on_create_server_pressed"
+	)
+	_u = _node_being_added.connect(
+		"join_server_pressed", self, "_on_join_server_pressed"
+	)
+	coro.resume()
 
 
 func _on_create_server_pressed():
-	var lobby := get_node("../Lobby")
-	lobby.create_server()
+	_get_lobby().create_server()
 
-	var lobby_ui: Node = load("res://scenes/lobby_ui.tscn").instance()
-	lobby_ui.name = "LobbyUI"
-	lobby_ui.lobby = lobby
-	get_parent().add_child(lobby_ui)
+	var coro = _add_control_node_to_parent(
+		"res://scenes/lobby_ui.tscn", "LobbyUI"
+	)
+	_node_being_added.lobby = _get_lobby()
+	coro.resume()
 
 
-func _add_connecting_message():
-	var connecting_message: Node = load("res://scenes/screen_message.tscn").instance()
-	connecting_message.name = "ConnectingMessage"
-	get_parent().add_child(connecting_message)
+func _on_join_server_pressed():
+	_get_lobby().join_server()
+
+	_add_control_node_to_parent("res://scenes/screen_message.tscn", "ConnectingMessage").resume()
+
+
+func _add_control_node_to_parent(path: String, name: String):
+	_node_being_added = load(path).instance()
+	_node_being_added.name = name
+	yield()
+	get_parent().add_child(_node_being_added)
+
+
+func _get_lobby():
+	return get_node("../Lobby")
