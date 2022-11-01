@@ -7,6 +7,7 @@ func _ready():
 	var _u: int
 	_u = lobby.connect("peer_added", self, "_add_player")
 	_u = lobby.connect("peer_removed", self, "_remove_player")
+	add_item(lobby.info.name)
 
 
 func get_item_names():
