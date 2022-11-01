@@ -1,54 +1,45 @@
-extends GutTest
+extends IntegTest
 
-var scene_tree
-var main_menu
-var root
+const MainMenu = preload("res://scripts/main_menu.gd")
+const Main = preload("res://scripts/main.gd")
+
+var scene_tree: SceneTree
+var main_menu: MainMenu
+var main: Main
 
 
 func before_each():
-	var sub_st = add_child_autofree(SubSceneTree.new())
-	root = sub_st.st.root
+	var sub_st := add_sub_scene_tree_as_child()
 	scene_tree = sub_st.st
-
-	main_menu = preload("res://scenes/main_menu.tscn").instance()
-	main_menu.name = "MainMenu"
-	root.add_child(main_menu)
-
-	var lobby = Lobby.new()
-	lobby.name = "Lobby"
-	root.add_child(lobby)
+	main = preload("res://scenes/main.tscn").instance()
+	scene_tree.root.add_child(main)
+	main_menu = main.get_node("MainMenu")
 
 
 func test_create_server_button_click_creates_server_and_opens_lobby_ui():
-	var create_server_button = main_menu.get_node("ButtonList/CreateServer")
-	
-	create_server_button.emit_signal("pressed")
-	scene_tree.idle(0.1)
+	main_menu.get_node("ButtonList/CreateServer").emit_signal("pressed")
+	var _u := scene_tree.idle(0.1)
 
 	assert_true(
 		scene_tree.is_network_server(), "check that peer is network server"
 	)
 	assert_true(
-		root.has_node("LobbyUI"),
+		main.has_node("LobbyUI"),
 		"check that LobbyUI scene was created under main node"
-	)
-	assert_false(
-		root.has_node("MainMenu"),
-		"check that MainMenu scene was deleted under main node"
 	)
 
 
 func test_join_server_button_click_joins_server_and_shows_connecting_message():
-	var join_server_button = main_menu.get_node("ButtonList/JoinServer")
-	
-	join_server_button.emit_signal("pressed")
-	scene_tree.idle(0.1)
+	main_menu.get_node("ButtonList/JoinServer").emit_signal("pressed")
+	var _u := scene_tree.idle(0.1)
 
 	assert_true(
-		scene_tree.has_network_peer(), "check that peer is valid (connected)"
+		scene_tree.has_network_peer(), "check that peer is valid"
 	)
 	assert_true(
-		root.has_node("ConnectingMessage"),
-		"check that LobbyUI scene was created under main node"
+		main.has_node("ConnectingMessage"),
+		"check that ConnectingMessage scene was created under main node"
 	)
-	assert_eq(root.get_node("ConnectingMessage").message, "Connecting to server...")
+	assert_eq(
+		main.get_node("ConnectingMessage").message, "Connecting to server..."
+	)

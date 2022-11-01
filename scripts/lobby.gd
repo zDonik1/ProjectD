@@ -1,6 +1,9 @@
 class_name Lobby
 extends Node
 
+signal peer_added(info)
+signal peer_removed(index)
+
 const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
 
@@ -69,6 +72,7 @@ func _network_peer_connected(id):
 
 func _network_peer_disconnected(id):
 	Logger.info("Peer disconnected with id {}".format([id], "{}"), "Lobby")
+	emit_signal("peer_removed", _get_index_of_player(id))
 
 
 func _connected_to_server():
@@ -84,9 +88,17 @@ func _server_disconnected():
 	Logger.info("Disconnected from the server", "Lobby")
 
 
-func _register_player(id, _info):
-	players_info.append(LobbyUtils.make_player_info_with_id(id, _info))
-
-
 remote func _register_new_player(_info):
 	_register_player(multiplayer.get_rpc_sender_id(), _info)
+
+
+func _register_player(id, _info):
+	players_info.append(LobbyUtils.make_player_info_with_id(id, _info))
+	emit_signal("peer_added", _info)
+
+
+func _get_index_of_player(id):
+	for index in range(players_info.size()):
+		if players_info[index].id == id:
+			return index
+	return -1

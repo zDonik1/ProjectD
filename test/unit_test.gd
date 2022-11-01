@@ -22,3 +22,13 @@ func before_all():
 func before_each():
 	multiplayer_inst = autofree(FakeMultiplayerAPI.new())
 	multiplayer_inst.root_node = _runner_node
+
+
+########################
+# ---- UTILITIES ----- #
+########################
+
+
+func free_node_if_exists(path: NodePath) -> void:
+	if has_node(path):
+		get_node(path).free()
