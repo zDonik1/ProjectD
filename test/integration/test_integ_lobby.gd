@@ -10,9 +10,9 @@ func test_connecting_to_server_properly_initializes_info_on_all_peers():
 
 	var server_main = instantiate_server_with_name(names.server)
 	var client1_main = instantiate_client_with_name(names.client1)
-	var client2_main = instantiate_client_with_name(names.client1)
+	var client2_main = instantiate_client_with_name(names.client2)
 
-	yield(yield_for(0.3), YIELD)
+	yield(yield_for(0.5), YIELD)
 
 	var expected_players_info = [
 		Lobby.LobbyUtils.make_player_info_with_id(
@@ -25,10 +25,11 @@ func test_connecting_to_server_properly_initializes_info_on_all_peers():
 		),
 		Lobby.LobbyUtils.make_player_info_with_id(
 			client2_main.get_tree().get_network_unique_id(), 
-			Lobby.LobbyUtils.make_info_with_name(names.client1)
+			Lobby.LobbyUtils.make_info_with_name(names.client2)
 		),
 	]
 
+	print(server_main.get_node("Lobby").players_info)
 	assert_true(
 		TestUtils.is_array_similar(
 			server_main.get_node("Lobby").players_info, expected_players_info

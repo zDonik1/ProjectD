@@ -26,11 +26,7 @@ func create_server():
 	_ensure_peer_exists()
 	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	multiplayer.set_network_peer(peer)
-	players_info = [
-		LobbyUtils.make_player_info_with_id(
-			multiplayer.get_network_unique_id(), info
-		)
-	]
+	call_deferred("_register_self")
 
 
 func join_server():
@@ -77,7 +73,7 @@ func _network_peer_disconnected(id):
 
 func _connected_to_server():
 	Logger.info("Successfully connected to server", "Lobby")
-	_register_player(multiplayer.get_network_unique_id(), info)
+	_register_self()
 
 
 func _connection_failed():
@@ -88,11 +84,15 @@ func _server_disconnected():
 	Logger.info("Disconnected from the server", "Lobby")
 
 
-remote func _register_new_player(_info):
+remote func _register_new_player(_info: Dictionary):
 	_register_player(multiplayer.get_rpc_sender_id(), _info)
 
 
-func _register_player(id, _info):
+func _register_self():
+	_register_player(multiplayer.get_network_unique_id(), info)
+
+
+func _register_player(id: int, _info: Dictionary):
 	players_info.append(LobbyUtils.make_player_info_with_id(id, _info))
 	emit_signal("peer_added", _info)
 

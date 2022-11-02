@@ -6,6 +6,9 @@ static func get_player_info():
 
 
 static func is_array_similar(actual_arr: Array, expected_arr: Array) -> bool:
+	if actual_arr.size() != expected_arr.size():
+		return false
+		
 	for elem in expected_arr:
 		var found := false
 		for act_elem in actual_arr:

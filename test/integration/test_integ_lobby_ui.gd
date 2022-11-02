@@ -12,6 +12,28 @@ func test_all_peers_show_up_in_list_after_connecting():
 	var client1_main := instantiate_client_with_name(names.client1)
 	var client2_main := instantiate_client_with_name(names.client2)
 
-	yield(yield_for(0.1), YIELD)
+	yield(yield_for(0.5), YIELD)
 
-	assert_eq(server_main.get_node("LobbyUI").get_item_names(), names.values())
+	assert_true(
+		TestUtils.is_array_similar(
+			server_main.get_node("LobbyUI").get_item_names(), 
+			names.values()
+		), 
+		"check server lobbyui names are updated"
+	)
+
+	assert_true(
+		TestUtils.is_array_similar(
+			client1_main.get_node("LobbyUI").get_item_names(), 
+			names.values()
+		), 
+		"check client 1 lobbyui names are updated"
+	)
+
+	assert_true(
+		TestUtils.is_array_similar(
+			client2_main.get_node("LobbyUI").get_item_names(), 
+			names.values()
+		), 
+		"check client 2 lobbyui names are updated"
+	)

@@ -23,18 +23,25 @@ func add_main_menu():
 func _on_create_server_pressed():
 	_get_lobby().create_server()
 
-	var coro = _add_control_node_to_parent(
-		"res://scenes/lobby_ui.tscn", "LobbyUI"
-	)
-	_node_being_added.lobby = _get_lobby()
-	coro.resume()
+	_open_lobby_ui()
 
 
 func _on_join_server_pressed():
 	_get_lobby().join_server()
-
+	
 	var coro = _add_control_node_to_parent("res://scenes/screen_message.tscn", "ConnectingMessage")
 	_node_being_added.message = "Connecting to server..."
+	coro.resume()
+
+	yield(get_tree(), "connected_to_server")
+	_open_lobby_ui()
+
+
+func _open_lobby_ui():
+	var coro = _add_control_node_to_parent(
+		"res://scenes/lobby_ui.tscn", "LobbyUI"
+	)
+	_node_being_added.lobby = _get_lobby()
 	coro.resume()
 
 
