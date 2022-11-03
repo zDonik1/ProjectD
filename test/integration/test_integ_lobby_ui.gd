@@ -37,3 +37,20 @@ func test_all_peers_show_up_in_list_after_connecting():
 		), 
 		"check client 2 lobbyui names are updated"
 	)
+
+
+func test_transitions_to_game_scene_when_server_starts_game():
+	var server_main := instantiate_server_with_name("Server")
+	var client_main := instantiate_client_with_name("Client")
+
+	server_main.get_node("LobbyUI/StartGame").emit_signal("pressed")
+
+	yield(yield_for(0.1), YIELD)
+
+	assert_true(server_main.has_node("Game"), "check server transitioned to Game scene")
+	assert_true(client_main.has_node("Game"), "check client transitioned to Game scene")
+	assert_false(
+		client_main.get_node("LobbyUI").has_node("StartGame"), 
+		"check client doesn't have StartGame button"
+	)
+	
