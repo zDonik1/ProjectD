@@ -19,12 +19,16 @@ func get_item_names():
 func set_item_names(names: Array):
 	clear()
 	for name in names:
-		add_item(name)
+		_add_non_selectable_name(name)
 
 
 func _add_player(info: Dictionary):
-	add_item(info.name)
+	_add_non_selectable_name(info.name)
 
 
 func _remove_player(index: int):
 	remove_item(index)
+
+
+func _add_non_selectable_name(name: String):
+	add_item(name, null, false)

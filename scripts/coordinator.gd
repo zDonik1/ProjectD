@@ -21,12 +21,14 @@ func add_main_menu():
 
 
 func _on_create_server_pressed():
+	_initialize_player_name_in_lobby()
 	_get_lobby().create_server()
 
 	_open_lobby_ui()
 
 
 func _on_join_server_pressed():
+	_initialize_player_name_in_lobby()
 	_get_lobby().join_server()
 	
 	var coro = _add_control_node_to_parent("res://scenes/screen_message.tscn", "ConnectingMessage")
@@ -52,5 +54,13 @@ func _add_control_node_to_parent(path: String, name: String):
 	get_parent().add_child(_node_being_added)
 
 
+func _initialize_player_name_in_lobby():
+	_get_lobby().info.name = _get_main_menu().player_name
+
+
 func _get_lobby():
 	return get_node("../Lobby")
+
+
+func _get_main_menu():
+	return get_node("../MainMenu")
