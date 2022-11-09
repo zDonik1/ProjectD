@@ -55,24 +55,8 @@ class TestLobby:
 	func test_creating_server_intializes_players_info_with_self_info():
 		lobby.create_server()
 
-		assert_eq_deep(
-			lobby.players_info,
-			[
-				{
-					"id": lobby.multiplayer.get_network_unique_id(),
-					"info": lobby.info,
-				}
-			]
-		)
-
-	func test_peer_added_signal_emitted_when_new_player_registered():
-		watch_signals(lobby)
-
-		lobby._register_new_player(TestUtils.get_player_info())
-
-		assert_signal_emitted_with_parameters(
-			lobby, "peer_added", [TestUtils.get_player_info()]
-		)
+		assert_called(lobby, "call_deferred", ["_register_self"])
+		
 
 	func test_peer_removed_signal_emmitted_when_player_disconnects():
 		var id = 10
@@ -182,6 +166,16 @@ class TestLobbyWithConnectedPeer:
 					sender_id, TestUtils.get_player_info()
 				)
 			]
+		)
+	
+	func test_peer_added_signal_emitted_when_new_player_registered():
+		lobby.custom_multiplayer.sender_id = 10
+		watch_signals(lobby)
+
+		lobby._register_new_player(TestUtils.get_player_info())
+
+		assert_signal_emitted_with_parameters(
+			lobby, "peer_added", [TestUtils.get_player_info()]
 		)
 
 

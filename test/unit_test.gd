@@ -4,9 +4,9 @@ class_name UnitTest extends GutTest
 class FakeMultiplayerAPI:
 	extends MultiplayerAPI
 
-	var sender_id
+	var sender_id: int
 
-	func get_rpc_sender_id():
+	func get_rpc_sender_id() -> int:
 		return sender_id
 
 
