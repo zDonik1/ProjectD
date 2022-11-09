@@ -6,6 +6,7 @@ const MainMenuScene := preload("res://scenes/main_menu.tscn")
 const LobbyUIScene := preload("res://scenes/lobby_ui.tscn")
 const LobbyUIServerScene := preload("res://scenes/lobby_ui_server.tscn")
 const ScreenMessageScene := preload("res://scenes/screen_message.tscn")
+const GameScene := preload("res://scenes/game.tscn")
 
 var _node_being_added: Node
 
@@ -28,7 +29,7 @@ func _on_create_server_pressed():
 	_initialize_player_name_in_lobby()
 	_get_lobby().create_server()
 
-	_open_lobby_ui(LobbyUIServerScene)
+	_open_lobby_ui_server()
 
 
 func _on_join_server_pressed():
@@ -40,7 +41,7 @@ func _on_join_server_pressed():
 	coro.resume()
 
 	yield(get_tree(), "connected_to_server")
-	_open_lobby_ui()
+	_open_lobby_ui().resume()
 
 
 func _open_lobby_ui(lobby_ui: PackedScene = LobbyUIScene):
@@ -48,7 +49,18 @@ func _open_lobby_ui(lobby_ui: PackedScene = LobbyUIScene):
 		lobby_ui, "LobbyUI"
 	)
 	_node_being_added.lobby = _get_lobby()
+	yield()
 	coro.resume()
+
+
+func _open_lobby_ui_server():
+	var coro = _open_lobby_ui(LobbyUIServerScene)
+	var _u := _node_being_added.connect("start_game_pressed", self, "_on_lobby_ui_start_game_pressed")
+	coro.resume()
+
+
+func _on_lobby_ui_start_game_pressed():
+	_add_control_node_to_parent(GameScene, "Game").resume()
 
 
 func _add_control_node_to_parent(scene: PackedScene, name: String):
