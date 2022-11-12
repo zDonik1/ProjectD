@@ -43,6 +43,8 @@ func test_transitions_to_game_scene_when_server_starts_game():
 	var server_main := instantiate_server_with_name("Server")
 	var client_main := instantiate_client_with_name("Client")
 
+	yield(yield_for(0.1), YIELD)
+
 	server_main.get_node("LobbyUI/StartGame").emit_signal("pressed")
 
 	yield(yield_for(0.1), YIELD)

@@ -12,7 +12,7 @@ var _node_being_added: Node
 
 
 func add_main_menu():
-	var coro = _add_control_node_to_parent(
+	var coro = _add_node_to_parent(
 		MainMenuScene, "MainMenu"
 	)
 	var _u: int
@@ -23,6 +23,10 @@ func add_main_menu():
 		"join_server_pressed", self, "_on_join_server_pressed"
 	)
 	coro.resume()
+
+
+remotesync func _start_game():
+	_add_node_to_parent(GameScene, "Game").resume()
 
 
 func _on_create_server_pressed():
@@ -36,7 +40,7 @@ func _on_join_server_pressed():
 	_initialize_player_name_in_lobby()
 	_get_lobby().join_server()
 	
-	var coro = _add_control_node_to_parent(ScreenMessageScene, "ConnectingMessage")
+	var coro = _add_node_to_parent(ScreenMessageScene, "ConnectingMessage")
 	_node_being_added.message = "Connecting to server..."
 	coro.resume()
 
@@ -44,8 +48,12 @@ func _on_join_server_pressed():
 	_open_lobby_ui().resume()
 
 
+func _on_lobby_ui_start_game_pressed():
+	rpc("_start_game")
+
+
 func _open_lobby_ui(lobby_ui: PackedScene = LobbyUIScene):
-	var coro = _add_control_node_to_parent(
+	var coro = _add_node_to_parent(
 		lobby_ui, "LobbyUI"
 	)
 	_node_being_added.lobby = _get_lobby()
@@ -59,11 +67,7 @@ func _open_lobby_ui_server():
 	coro.resume()
 
 
-func _on_lobby_ui_start_game_pressed():
-	_add_control_node_to_parent(GameScene, "Game").resume()
-
-
-func _add_control_node_to_parent(scene: PackedScene, name: String):
+func _add_node_to_parent(scene: PackedScene, name: String):
 	_node_being_added = scene.instance()
 	_node_being_added.name = name
 	yield()
