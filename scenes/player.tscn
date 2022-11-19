@@ -5,10 +5,7 @@
 
 [sub_resource type="CircleShape2D" id=1]
 
-[node name="Player" type="RigidBody2D"]
-gravity_scale = 0.0
-can_sleep = false
-linear_damp = 0.0
+[node name="Player" type="KinematicBody2D"]
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true

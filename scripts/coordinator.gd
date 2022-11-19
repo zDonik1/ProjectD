@@ -28,6 +28,7 @@ func add_main_menu():
 
 remotesync func _start_game():
 	var game := _make_instance_of_scene_with_name(GameScene, "Game")
+	game.lobby = _get_lobby()
 	navigation.set_ui_screen(game)
 
 
