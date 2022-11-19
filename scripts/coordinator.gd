@@ -7,7 +7,6 @@ const MainMenuScene := preload("res://scenes/main_menu.tscn")
 const LobbyUIScene := preload("res://scenes/lobby_ui.tscn")
 const LobbyUIServerScene := preload("res://scenes/lobby_ui_server.tscn")
 const ScreenMessageScene := preload("res://scenes/screen_message.tscn")
-const GameScene := preload("res://scenes/game.tscn")
 
 var navigation: UINavigation
 
@@ -27,9 +26,8 @@ func add_main_menu():
 
 
 remotesync func _start_game():
-	var game := _make_instance_of_scene_with_name(GameScene, "Game")
-	game.lobby = _get_lobby()
-	navigation.set_ui_screen(game)
+	navigation._clear()
+	get_node("../Game").start_game()
 
 
 func _on_create_server_pressed():

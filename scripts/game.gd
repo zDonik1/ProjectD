@@ -1,17 +1,20 @@
-extends Node
 
+extends Node
 const PlayerScene := preload("res://scenes/player.tscn")
 const Player := preload("res://scripts/player.gd")
 
-var lobby: Lobby
+export(NodePath) var lobby_path: NodePath
+onready var lobby: Lobby = get_node(lobby_path)
 
 var _rng := RandomNumberGenerator.new()
 var _player: Player  # holds current game player
 
 
-func _ready():
+func start_game():
 	_instantiate_all_payers()
 	$PlayerController.player = _player
+	$PlayerController.set_process(true)
+	$InGameUI.show()
 
 
 func _instantiate_all_payers():
