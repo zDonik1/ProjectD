@@ -3,8 +3,6 @@ extends Node
 
 func _ready():
 	$Coordinator.navigation = $Navigation
-	$Coordinator.add_main_menu()
-	
 
 	if OS.get_cmdline_args().size() > 0:
 		match OS.get_cmdline_args()[0]:
@@ -15,7 +13,7 @@ func _ready():
 
 
 func _start_server_game():
-	get_node("MainMenu").emit_signal("create_server_pressed")
+	$Screens/MainMenuScreen.emit_signal("create_server_pressed")
 
 	yield(get_tree().create_timer(0.5), "timeout")
 
@@ -23,4 +21,4 @@ func _start_server_game():
 
 
 func _start_client_game():
-	get_node("MainMenu").emit_signal("join_server_pressed")
+	$Screens/MainMenuScreen.emit_signal("join_server_pressed")

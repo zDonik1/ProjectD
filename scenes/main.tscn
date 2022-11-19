@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://3rd/joystick/virtual_joystick.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/navigation.gd" type="Script" id=2]
@@ -7,6 +7,7 @@
 [ext_resource path="res://scripts/player_controller.gd" type="Script" id=5]
 [ext_resource path="res://scripts/lobby.gd" type="Script" id=6]
 [ext_resource path="res://scripts/game.gd" type="Script" id=7]
+[ext_resource path="res://scripts/main_menu.gd" type="Script" id=8]
 
 [node name="Main" type="Node"]
 script = ExtResource( 4 )
@@ -20,6 +21,45 @@ script = ExtResource( 2 )
 [node name="Coordinator" type="Node" parent="."]
 script = ExtResource( 3 )
 
+[node name="Screens" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="MainMenuScreen" type="CenterContainer" parent="Screens"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 8 )
+
+[node name="ButtonList" type="VBoxContainer" parent="Screens/MainMenuScreen"]
+margin_left = 463.0
+margin_top = 250.0
+margin_right = 560.0
+margin_bottom = 350.0
+alignment = 1
+
+[node name="PlayerName" type="LineEdit" parent="Screens/MainMenuScreen/ButtonList"]
+margin_right = 97.0
+margin_bottom = 24.0
+text = "Player"
+
+[node name="LineEdit" type="LineEdit" parent="Screens/MainMenuScreen/ButtonList"]
+margin_top = 28.0
+margin_right = 97.0
+margin_bottom = 52.0
+text = "127.0.0.1"
+
+[node name="JoinServer" type="Button" parent="Screens/MainMenuScreen/ButtonList"]
+margin_top = 56.0
+margin_right = 97.0
+margin_bottom = 76.0
+text = "Join server"
+
+[node name="CreateServer" type="Button" parent="Screens/MainMenuScreen/ButtonList"]
+margin_top = 80.0
+margin_right = 97.0
+margin_bottom = 100.0
+text = "Create server"
+
 [node name="Game" type="Node" parent="."]
 script = ExtResource( 7 )
 lobby_path = NodePath("../Lobby")
@@ -28,7 +68,11 @@ lobby_path = NodePath("../Lobby")
 script = ExtResource( 5 )
 
 [node name="InGameUI" type="Control" parent="Game"]
+visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="VirtualJoystick" parent="Game/InGameUI" instance=ExtResource( 1 )]
+
+[connection signal="create_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_create_server_pressed"]
+[connection signal="join_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_join_server_pressed"]

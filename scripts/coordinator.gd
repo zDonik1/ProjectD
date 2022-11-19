@@ -3,7 +3,6 @@ extends Node
 
 const UINavigation := preload("res://scripts/navigation.gd")
 const MainMenu := preload("res://scripts/main_menu.gd")
-const MainMenuScene := preload("res://scenes/main_menu.tscn")
 const LobbyUIScene := preload("res://scenes/lobby_ui.tscn")
 const LobbyUIServerScene := preload("res://scenes/lobby_ui_server.tscn")
 const ScreenMessageScene := preload("res://scenes/screen_message.tscn")
@@ -11,42 +10,10 @@ const ScreenMessageScene := preload("res://scenes/screen_message.tscn")
 var navigation: UINavigation
 
 
-func add_main_menu():
-	var main_menu := _make_instance_of_scene_with_name(
-		MainMenuScene, "MainMenu"
-	)
-	var _u: int
-	_u = main_menu.connect(
-		"create_server_pressed", self, "_on_create_server_pressed"
-	)
-	_u = main_menu.connect(
-		"join_server_pressed", self, "_on_join_server_pressed"
-	)
-	navigation.add_ui_screen(main_menu)
-
-
 remotesync func _start_game():
 	navigation._clear()
+	get_node("../Screens").hide()
 	get_node("../Game").start_game()
-
-
-func _on_create_server_pressed():
-	_initialize_player_name_in_lobby()
-	_get_lobby().create_server()
-
-	_open_lobby_ui_server()
-
-
-func _on_join_server_pressed():
-	_initialize_player_name_in_lobby()
-	_get_lobby().join_server()
-	
-	var message_ui := _make_instance_of_scene_with_name(ScreenMessageScene, "ConnectingMessage")
-	message_ui.message = "Connecting to server..."
-	navigation.add_ui_screen(message_ui)
-
-	yield(get_tree(), "connected_to_server")
-	var _u := _open_lobby_ui()
 
 
 func _on_lobby_ui_start_game_pressed():
@@ -80,4 +47,23 @@ func _get_lobby():
 
 
 func _get_main_menu():
-	return get_node("../MainMenu")
+	return get_node("../Screens/MainMenuScreen")
+
+
+func _on_MainMenuScreen_create_server_pressed():
+	_initialize_player_name_in_lobby()
+	_get_lobby().create_server()
+
+	_open_lobby_ui_server()
+
+
+func _on_MainMenuScreen_join_server_pressed():
+	_initialize_player_name_in_lobby()
+	_get_lobby().join_server()
+	
+	var message_ui := _make_instance_of_scene_with_name(ScreenMessageScene, "ConnectingMessage")
+	message_ui.message = "Connecting to server..."
+	navigation.add_ui_screen(message_ui)
+
+	yield(get_tree(), "connected_to_server")
+	var _u := _open_lobby_ui()
