@@ -2,7 +2,6 @@ class_name Coordinator
 extends Node
 
 const ServerLobbyScreenScene := preload("res://scenes/server_lobby_screen.tscn")
-const ScreenMessageScene := preload("res://scenes/screen_message.tscn")
 const UINavigation := preload("res://scripts/navigation.gd")
 
 export var lobby_path: NodePath
@@ -50,9 +49,8 @@ func _on_MainMenuScreen_join_server_pressed():
 	_initialize_player_name_in_lobby()
 	lobby.join_server()
 	
-	var message_ui := _make_instance_of_scene_with_name(ScreenMessageScene, "ConnectingMessage")
-	message_ui.message = "Connecting to server..."
-	get_node("../Screens").add_child(message_ui)
+	navigation.get_screen("MessageScreen").message = "Connecting to server..."
+	navigation.show_screen("MessageScreen")
 
 	yield(get_tree(), "connected_to_server")
 	navigation.show_screen("LobbyScreen")
