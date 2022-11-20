@@ -1,7 +1,7 @@
 class_name Coordinator
 extends Node
 
-const ServerLobbyScreenScene := preload("res://scenes/server_lobby_screen.tscn")
+const ServerLobbyScreenScene := preload("res://screens/server_lobby_screen.tscn")
 const UINavigation := preload("res://scripts/navigation.gd")
 
 export var lobby_path: NodePath
