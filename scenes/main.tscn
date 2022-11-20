@@ -33,7 +33,6 @@ anchor_bottom = 1.0
 
 [node name="LobbyScreen" parent="Screens" instance=ExtResource( 9 )]
 visible = false
-navigation_path = NodePath("../../Navigation")
 
 [node name="MessageScreen" parent="Screens" instance=ExtResource( 10 )]
 visible = false
@@ -56,3 +55,4 @@ anchor_bottom = 1.0
 [connection signal="peer_removed" from="Lobby" to="Screens/LobbyScreen" method="_on_Lobby_peer_removed"]
 [connection signal="create_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_create_server_pressed"]
 [connection signal="join_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_join_server_pressed"]
+[connection signal="back_pressed" from="Screens/LobbyScreen" to="Coordinator" method="_on_LobbyScreen_back_pressed"]

@@ -7,7 +7,7 @@ signal peer_removed(index)
 const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
 
-var peer = null
+var peer: NetworkedMultiplayerENet
 var ip_address = "127.0.0.1"
 
 var info = LobbyUtils.make_info_with_name("Player")
@@ -24,15 +24,19 @@ class LobbyUtils:
 
 func create_server():
 	_ensure_peer_exists()
-	peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
+	var _u := peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	multiplayer.set_network_peer(peer)
 	call_deferred("_register_self")
 
 
 func join_server():
 	_ensure_peer_exists()
-	peer.create_client(ip_address, DEFAULT_PORT)
+	var _u := peer.create_client(ip_address, DEFAULT_PORT)
 	multiplayer.set_network_peer(peer)
+
+
+func disconnect_from_network():
+	peer.close_connection()
 
 
 func _ready():
@@ -57,7 +61,7 @@ func _ensure_peer_exists():
 		peer = _make_peer()
 
 
-func _make_peer():
+func _make_peer() -> NetworkedMultiplayerENet:
 	return NetworkedMultiplayerENet.new()
 
 

@@ -1,11 +1,7 @@
 class_name LobbyScreen
 extends Control
 
-const UiNavigation := preload("res://scripts/navigation.gd")
-
-export var navigation_path: NodePath
-
-onready var navigation := get_node(navigation_path) as UiNavigation
+signal back_pressed
 
 onready var _player_list: ItemList = $PlayerList
 
@@ -36,4 +32,4 @@ func _on_Lobby_peer_removed(index: int):
 
 
 func _on_Back_pressed():
-	navigation.show_screen("MainMenuScreen")
+	emit_signal("back_pressed")
