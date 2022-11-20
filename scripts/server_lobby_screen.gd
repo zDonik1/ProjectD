@@ -1,4 +1,4 @@
-extends "res://scripts/lobby_screen.gd"
+extends LobbyScreen
 
 signal start_game_pressed
 

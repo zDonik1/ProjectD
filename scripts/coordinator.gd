@@ -2,13 +2,14 @@ class_name Coordinator
 extends Node
 
 const ServerLobbyScreenScene := preload("res://screens/server_lobby_screen.tscn")
-const UINavigation := preload("res://scripts/navigation.gd")
+const UiNavigation := preload("res://scripts/navigation.gd")
+const ServerLobbyScreen := preload("res://scripts/server_lobby_screen.gd")
 
 export var lobby_path: NodePath
 export var navigation_path: NodePath
 
-onready var lobby: Lobby = get_node(lobby_path)
-onready var navigation: UINavigation = get_node(navigation_path)
+onready var lobby := get_node(lobby_path) as Lobby
+onready var navigation := get_node(navigation_path) as UiNavigation
 
 
 remotesync func _start_game():
@@ -22,10 +23,14 @@ func _on_lobby_ui_start_game_pressed():
 
 func _open_lobby_ui_server():
 	navigation.remove_screen("LobbyScreen")
-	var lobby_screen := _make_instance_of_scene_with_name(ServerLobbyScreenScene, "LobbyScreen")
+	
+	var lobby_screen := _make_instance_of_scene_with_name(ServerLobbyScreenScene, "LobbyScreen") as ServerLobbyScreen
 	lobby_screen.lobby = lobby
-	navigation.add_screen(lobby_screen)
 	var _u := lobby_screen.connect("start_game_pressed", self, "_on_lobby_ui_start_game_pressed")
+	navigation.add_screen(lobby_screen)
+	lobby_screen.navigation = navigation
+	
+	navigation.show_screen("LobbyScreen")
 
 
 func _make_instance_of_scene_with_name(packed_scene: PackedScene, name: String) -> Node:

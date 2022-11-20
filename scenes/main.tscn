@@ -33,6 +33,7 @@ anchor_bottom = 1.0
 
 [node name="LobbyScreen" parent="Screens" instance=ExtResource( 9 )]
 visible = false
+navigation_path = NodePath("../../Navigation")
 
 [node name="MessageScreen" parent="Screens" instance=ExtResource( 10 )]
 visible = false

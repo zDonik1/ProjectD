@@ -1,4 +1,11 @@
+class_name LobbyScreen
 extends Control
+
+const UiNavigation := preload("res://scripts/navigation.gd")
+
+export var navigation_path: NodePath
+
+onready var navigation := get_node(navigation_path) as UiNavigation
 
 onready var _player_list: ItemList = $PlayerList
 
@@ -26,3 +33,7 @@ func _on_Lobby_peer_added(info: Dictionary):
 
 func _on_Lobby_peer_removed(index: int):
 	_player_list.remove_item(index)
+
+
+func _on_Back_pressed():
+	navigation.show_screen("MainMenuScreen")

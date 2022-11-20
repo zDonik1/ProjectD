@@ -7,12 +7,12 @@
 script = ExtResource( 2 )
 
 [node name="PlayerList" parent="." index="0"]
-margin_bottom = 576.0
+margin_bottom = 552.0
 
 [node name="StartGame" type="Button" parent="." index="1"]
-margin_top = 580.0
+margin_top = 556.0
 margin_right = 1024.0
-margin_bottom = 600.0
+margin_bottom = 576.0
 text = "Start game"
 
 [connection signal="pressed" from="StartGame" to="." method="_on_StartGame_pressed"]
