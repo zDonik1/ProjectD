@@ -2,8 +2,6 @@ extends Node
 
 
 func _ready():
-	$Coordinator.navigation = $Navigation
-
 	if OS.get_cmdline_args().size() > 0:
 		match OS.get_cmdline_args()[0]:
 			"--startserver":
@@ -17,7 +15,7 @@ func _start_server_game():
 
 	yield(get_tree().create_timer(0.5), "timeout")
 
-	get_node("LobbyUI").emit_signal("start_game_pressed")
+	$Navigation.get_screen("LobbyScreen").emit_signal("start_game_pressed")
 
 
 func _start_client_game():

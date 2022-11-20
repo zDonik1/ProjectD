@@ -1,18 +1,19 @@
 class_name Coordinator
 extends Node
 
-const UINavigation := preload("res://scripts/navigation.gd")
-const MainMenu := preload("res://scripts/main_menu.gd")
-const LobbyUIScene := preload("res://scenes/lobby_ui.tscn")
-const LobbyUIServerScene := preload("res://scenes/lobby_ui_server.tscn")
+const ServerLobbyScreenScene := preload("res://scenes/server_lobby_screen.tscn")
 const ScreenMessageScene := preload("res://scenes/screen_message.tscn")
+const UINavigation := preload("res://scripts/navigation.gd")
 
-var navigation: UINavigation
+export var lobby_path: NodePath
+export var navigation_path: NodePath
+
+onready var lobby: Lobby = get_node(lobby_path)
+onready var navigation: UINavigation = get_node(navigation_path)
 
 
 remotesync func _start_game():
-	navigation._clear()
-	get_node("../Screens").hide()
+	navigation.hide_all_screens()
 	get_node("../Game").start_game()
 
 
@@ -20,16 +21,12 @@ func _on_lobby_ui_start_game_pressed():
 	rpc("_start_game")
 
 
-func _open_lobby_ui(lobby_ui_scene: PackedScene = LobbyUIScene) -> Node:
-	var lobby_ui := _make_instance_of_scene_with_name(lobby_ui_scene, "LobbyUI")
-	lobby_ui.lobby = _get_lobby()
-	navigation.add_ui_screen(lobby_ui)
-	return lobby_ui
-
-
 func _open_lobby_ui_server():
-	var lobby_ui := _open_lobby_ui(LobbyUIServerScene)
-	var _u := lobby_ui.connect("start_game_pressed", self, "_on_lobby_ui_start_game_pressed")
+	navigation.remove_screen("LobbyScreen")
+	var lobby_screen := _make_instance_of_scene_with_name(ServerLobbyScreenScene, "LobbyScreen")
+	lobby_screen.lobby = lobby
+	navigation.add_screen(lobby_screen)
+	var _u := lobby_screen.connect("start_game_pressed", self, "_on_lobby_ui_start_game_pressed")
 
 
 func _make_instance_of_scene_with_name(packed_scene: PackedScene, name: String) -> Node:
@@ -39,31 +36,23 @@ func _make_instance_of_scene_with_name(packed_scene: PackedScene, name: String) 
 
 
 func _initialize_player_name_in_lobby():
-	_get_lobby().info.name = _get_main_menu().player_name
-
-
-func _get_lobby():
-	return get_node("../Lobby")
-
-
-func _get_main_menu():
-	return get_node("../Screens/MainMenuScreen")
+	lobby.info.name = navigation.get_screen("MainMenuScreen").player_name
 
 
 func _on_MainMenuScreen_create_server_pressed():
 	_initialize_player_name_in_lobby()
-	_get_lobby().create_server()
+	lobby.create_server()
 
 	_open_lobby_ui_server()
 
 
 func _on_MainMenuScreen_join_server_pressed():
 	_initialize_player_name_in_lobby()
-	_get_lobby().join_server()
+	lobby.join_server()
 	
 	var message_ui := _make_instance_of_scene_with_name(ScreenMessageScene, "ConnectingMessage")
 	message_ui.message = "Connecting to server..."
-	navigation.add_ui_screen(message_ui)
+	get_node("../Screens").add_child(message_ui)
 
 	yield(get_tree(), "connected_to_server")
-	var _u := _open_lobby_ui()
+	navigation.show_screen("LobbyScreen")
