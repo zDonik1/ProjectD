@@ -64,6 +64,11 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://scripts/lobby.gd"
 }, {
+"base": "Control",
+"class": "LobbyScreen",
+"language": "GDScript",
+"path": "res://scripts/lobby_screen.gd"
+}, {
 "base": "Reference",
 "class": "Message",
 "language": "GDScript",
@@ -111,6 +116,7 @@ _global_script_class_icons={
 "IntegTest": "",
 "Layout": "",
 "Lobby": "",
+"LobbyScreen": "",
 "Message": "",
 "PatternLayout": "",
 "SubSceneTree": "",
@@ -136,8 +142,8 @@ InitialSetup="*res://scripts/initial_setup.gd"
 multirun/number_of_windows=2
 multirun/window_distance=1270
 multirun/add_custom_args=true
-multirun/first_window_args="--startserver"
-multirun/other_window_args="--startclient"
+multirun/first_window_args=""
+multirun/other_window_args=""
 
 [display]
 

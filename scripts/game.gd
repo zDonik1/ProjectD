@@ -1,22 +1,23 @@
 extends Node
-
 const PlayerScene := preload("res://scenes/player.tscn")
 const Player := preload("res://scripts/player.gd")
 
-var lobby: Lobby
-
 var _rng := RandomNumberGenerator.new()
 var _player: Player  # holds current game player
+var _lobby: Lobby
 
 
-func _ready():
+func start_game(lobby: Lobby):
+	_lobby = lobby
 	_instantiate_all_payers()
 	$PlayerController.player = _player
+	$PlayerController.set_process(true)
+	$InGameUI.show()
 
 
 func _instantiate_all_payers():
 	_rng.randomize()
-	for player_info in lobby.players_info:
+	for player_info in _lobby.players_info:
 		var current_id := player_info.id as int
 		var player := _instance_player(current_id)
 
@@ -32,5 +33,5 @@ func _instance_player(id: int) -> Node:
 		_rng.randi_range(0, ProjectSettings.get_setting("display/window/size/height"))
 	)
 	player.set_network_master(id)
-	add_child(player)
+	$World.add_child(player)
 	return player

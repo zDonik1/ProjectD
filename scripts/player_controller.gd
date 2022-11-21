@@ -5,6 +5,10 @@ const Player := preload("res://scripts/player.gd")
 var player: Player
 
 
+func _ready():
+	set_process(false)
+
+
 func  _process(_delta):
 	player.set_move_input(calc_move_input())
 

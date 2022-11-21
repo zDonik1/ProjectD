@@ -1,0 +1,18 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://screens/lobby_screen.tscn" type="PackedScene" id=1]
+[ext_resource path="res://scripts/server_lobby_screen.gd" type="Script" id=2]
+
+[node name="VBoxContainer" instance=ExtResource( 1 )]
+script = ExtResource( 2 )
+
+[node name="PlayerList" parent="." index="0"]
+margin_bottom = 552.0
+
+[node name="StartGame" type="Button" parent="." index="1"]
+margin_top = 556.0
+margin_right = 1024.0
+margin_bottom = 576.0
+text = "Start game"
+
+[connection signal="pressed" from="StartGame" to="." method="_on_StartGame_pressed"]
