@@ -3,7 +3,14 @@ extends Control
 
 signal back_pressed
 
+var lobby: Lobby
+
 onready var _player_list: ItemList = $PlayerList
+
+
+func _ready():
+	var _u := lobby.connect("peer_added", self, "_on_Lobby_peer_added")
+	_u = lobby.connect("peer_removed", self, "_on_Lobby_peer_removed")
 
 
 func get_item_names():

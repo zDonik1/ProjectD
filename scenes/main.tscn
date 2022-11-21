@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://3rd/joystick/virtual_joystick.tscn" type="PackedScene" id=1]
 [ext_resource path="res://scripts/navigation.gd" type="Script" id=2]
@@ -8,7 +8,6 @@
 [ext_resource path="res://scripts/lobby.gd" type="Script" id=6]
 [ext_resource path="res://scripts/game.gd" type="Script" id=7]
 [ext_resource path="res://screens/main_menu_screen.tscn" type="PackedScene" id=8]
-[ext_resource path="res://screens/lobby_screen.tscn" type="PackedScene" id=9]
 [ext_resource path="res://screens/message_screen.tscn" type="PackedScene" id=10]
 
 [node name="Main" type="Node"]
@@ -31,9 +30,6 @@ anchor_bottom = 1.0
 
 [node name="MainMenuScreen" parent="Screens" instance=ExtResource( 8 )]
 
-[node name="LobbyScreen" parent="Screens" instance=ExtResource( 9 )]
-visible = false
-
 [node name="MessageScreen" parent="Screens" instance=ExtResource( 10 )]
 visible = false
 
@@ -51,9 +47,5 @@ anchor_bottom = 1.0
 
 [node name="VirtualJoystick" parent="Game/InGameUI" instance=ExtResource( 1 )]
 
-[connection signal="peer_added" from="Lobby" to="Screens/LobbyScreen" method="_on_Lobby_peer_added"]
-[connection signal="peer_removed" from="Lobby" to="Screens/LobbyScreen" method="_on_Lobby_peer_removed"]
-[connection signal="peers_cleared" from="Lobby" to="Screens/LobbyScreen" method="_on_Lobby_peers_cleared"]
 [connection signal="create_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_create_server_pressed"]
 [connection signal="join_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_join_server_pressed"]
-[connection signal="back_pressed" from="Screens/LobbyScreen" to="Coordinator" method="_on_LobbyScreen_back_pressed"]

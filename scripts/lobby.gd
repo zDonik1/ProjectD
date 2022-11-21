@@ -16,7 +16,7 @@ var players_info := []
 
 
 class LobbyUtils:
-	static func make_player_info_with_id(_id, _info):
+	static func make_player_info_with_id(_id, _info) -> Dictionary:
 		return {"id": _id, "info": _info}
 
 	static func make_info_with_name(name):
@@ -101,7 +101,9 @@ func _register_self():
 
 
 func _register_player(id: int, _info: Dictionary):
-	players_info.append(LobbyUtils.make_player_info_with_id(id, _info))
+	var player_info := LobbyUtils.make_player_info_with_id(id, _info)
+	players_info.append(player_info)
+	Logger.debug("Registered player {0}".format([player_info]))
 	emit_signal("peer_added", _info)
 
 

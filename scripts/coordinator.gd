@@ -1,9 +1,9 @@
 class_name Coordinator
 extends Node
 
+const LobbyScreenScene := preload("res://screens/lobby_screen.tscn")
 const ServerLobbyScreenScene := preload("res://screens/server_lobby_screen.tscn")
 const UiNavigation := preload("res://scripts/navigation.gd")
-const ServerLobbyScreen := preload("res://scripts/server_lobby_screen.gd")
 
 export var lobby_path: NodePath
 export var navigation_path: NodePath
@@ -20,15 +20,17 @@ remotesync func _start_game():
 	get_node("../Game").start_game()
 
 
-func _open_lobby_ui_server():
-	navigation.remove_screen("LobbyScreen")
-	
-	var lobby_screen := _make_instance_of_scene_with_name(ServerLobbyScreenScene, "LobbyScreen") as ServerLobbyScreen
+func _open_server_lobby_screen():
+	_open_lobby_screen(ServerLobbyScreenScene)
+
+
+func _open_lobby_screen(lobby_screen_scene: PackedScene = LobbyScreenScene):
+	var lobby_screen := _make_instance_of_scene_with_name(lobby_screen_scene, "LobbyScreen") as LobbyScreen
 	lobby_screen.lobby = lobby
 	var _u := lobby_screen.connect("start_game_pressed", self, "_on_LobbyScreen_start_game_pressed")
 	_u = lobby_screen.connect("back_pressed", self, "_on_LobbyScreen_back_pressed")
-	navigation.add_screen(lobby_screen)
 	
+	navigation.add_screen(lobby_screen)
 	navigation.show_screen("LobbyScreen")
 
 
@@ -50,7 +52,7 @@ func _on_MainMenuScreen_create_server_pressed():
 	_initialize_player_name_in_lobby()
 	lobby.create_server()
 
-	_open_lobby_ui_server()
+	_open_server_lobby_screen()
 
 
 func _on_MainMenuScreen_join_server_pressed():
@@ -61,10 +63,12 @@ func _on_MainMenuScreen_join_server_pressed():
 	navigation.show_screen("MessageScreen")
 
 	yield(get_tree(), "connected_to_server")
-	navigation.show_screen("LobbyScreen")
+	
+	_open_lobby_screen()
 
 
 func _on_LobbyScreen_back_pressed():
+	navigation.remove_screen("LobbyScreen")
 	navigation.show_screen("MainMenuScreen")
 	lobby.disconnect_from_network()
 
