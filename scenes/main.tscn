@@ -34,6 +34,8 @@ script = ExtResource( 7 )
 [node name="PlayerController" type="Node" parent="Game"]
 script = ExtResource( 5 )
 
+[node name="World" type="Node" parent="Game"]
+
 [node name="InGameUI" type="Control" parent="Game"]
 visible = false
 anchor_right = 1.0

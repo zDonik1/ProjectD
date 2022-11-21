@@ -33,5 +33,5 @@ func _instance_player(id: int) -> Node:
 		_rng.randi_range(0, ProjectSettings.get_setting("display/window/size/height"))
 	)
 	player.set_network_master(id)
-	add_child(player)
+	$World.add_child(player)
 	return player
