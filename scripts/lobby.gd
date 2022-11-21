@@ -40,6 +40,12 @@ func _ready():
 	_u = multiplayer.connect("connection_failed", self, "_connection_failed")
 
 
+func _notification(what):
+	match what:
+		NOTIFICATION_PREDELETE:
+			disconnect_from_network()
+
+
 func create_server():
 	_ensure_peer_exists()
 	var _u := peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
@@ -55,7 +61,9 @@ func join_server():
 
 func disconnect_from_network():
 	Logger.info("Closing network connection", "Lobby")
-	peer.close_connection()
+	if peer:
+		peer.close_connection()
+		peer = null
 	_clear_player_list()
 
 
