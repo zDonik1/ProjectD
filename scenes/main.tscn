@@ -53,6 +53,7 @@ anchor_bottom = 1.0
 
 [connection signal="peer_added" from="Lobby" to="Screens/LobbyScreen" method="_on_Lobby_peer_added"]
 [connection signal="peer_removed" from="Lobby" to="Screens/LobbyScreen" method="_on_Lobby_peer_removed"]
+[connection signal="peers_cleared" from="Lobby" to="Screens/LobbyScreen" method="_on_Lobby_peers_cleared"]
 [connection signal="create_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_create_server_pressed"]
 [connection signal="join_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_join_server_pressed"]
 [connection signal="back_pressed" from="Screens/LobbyScreen" to="Coordinator" method="_on_LobbyScreen_back_pressed"]

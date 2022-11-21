@@ -3,6 +3,7 @@ extends Node
 
 signal peer_added(info)
 signal peer_removed(index)
+signal peers_cleared
 
 const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
@@ -11,7 +12,7 @@ var peer: NetworkedMultiplayerENet
 var ip_address = "127.0.0.1"
 
 var info = LobbyUtils.make_info_with_name("Player")
-var players_info = []
+var players_info := []
 
 
 class LobbyUtils:
@@ -20,23 +21,6 @@ class LobbyUtils:
 
 	static func make_info_with_name(name):
 		return {"name": name}
-
-
-func create_server():
-	_ensure_peer_exists()
-	var _u := peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
-	multiplayer.set_network_peer(peer)
-	call_deferred("_register_self")
-
-
-func join_server():
-	_ensure_peer_exists()
-	var _u := peer.create_client(ip_address, DEFAULT_PORT)
-	multiplayer.set_network_peer(peer)
-
-
-func disconnect_from_network():
-	peer.close_connection()
 
 
 func _ready():
@@ -54,6 +38,25 @@ func _ready():
 		"server_disconnected", self, "_server_disconnected"
 	)
 	_u = multiplayer.connect("connection_failed", self, "_connection_failed")
+
+
+func create_server():
+	_ensure_peer_exists()
+	var _u := peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
+	multiplayer.set_network_peer(peer)
+	call_deferred("_register_self")
+
+
+func join_server():
+	_ensure_peer_exists()
+	var _u := peer.create_client(ip_address, DEFAULT_PORT)
+	multiplayer.set_network_peer(peer)
+
+
+func disconnect_from_network():
+	Logger.info("Closing network connection", "Lobby")
+	peer.close_connection()
+	_clear_player_list()
 
 
 func _ensure_peer_exists():
@@ -86,6 +89,7 @@ func _connection_failed():
 
 func _server_disconnected():
 	Logger.info("Disconnected from the server", "Lobby")
+	_clear_player_list()
 
 
 remote func _register_new_player(_info: Dictionary):
@@ -99,6 +103,11 @@ func _register_self():
 func _register_player(id: int, _info: Dictionary):
 	players_info.append(LobbyUtils.make_player_info_with_id(id, _info))
 	emit_signal("peer_added", _info)
+
+
+func _clear_player_list():
+	players_info.clear()
+	emit_signal("peers_cleared")
 
 
 func _get_index_of_player(id):

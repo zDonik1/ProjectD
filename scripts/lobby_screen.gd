@@ -31,5 +31,9 @@ func _on_Lobby_peer_removed(index: int):
 	_player_list.remove_item(index)
 
 
+func _on_Lobby_peers_cleared():
+	_player_list.clear()
+
+
 func _on_Back_pressed():
 	emit_signal("back_pressed")
