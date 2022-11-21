@@ -1,16 +1,14 @@
-
 extends Node
 const PlayerScene := preload("res://scenes/player.tscn")
 const Player := preload("res://scripts/player.gd")
 
-export var lobby_path: NodePath
-onready var lobby: Lobby = get_node(lobby_path)
-
 var _rng := RandomNumberGenerator.new()
 var _player: Player  # holds current game player
+var _lobby: Lobby
 
 
-func start_game():
+func start_game(lobby: Lobby):
+	_lobby = lobby
 	_instantiate_all_payers()
 	$PlayerController.player = _player
 	$PlayerController.set_process(true)
@@ -19,7 +17,7 @@ func start_game():
 
 func _instantiate_all_payers():
 	_rng.randomize()
-	for player_info in lobby.players_info:
+	for player_info in _lobby.players_info:
 		var current_id := player_info.id as int
 		var player := _instance_player(current_id)
 

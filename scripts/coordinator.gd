@@ -15,7 +15,7 @@ func _ready():
 
 remotesync func _start_game():
 	navigation.hide_all_screens()
-	get_node("../Game").start_game()
+	get_node("../Game").start_game(_get_lobby())
 
 
 func _open_server_lobby_screen():
