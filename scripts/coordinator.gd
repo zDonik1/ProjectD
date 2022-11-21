@@ -32,6 +32,15 @@ func _open_lobby_screen(lobby_screen_scene: PackedScene = LobbyScreenScene):
 	navigation.show_screen("LobbyScreen")
 
 
+func _open_main_menu():
+	navigation.remove_screen("LobbyScreen")
+	navigation.show_screen("MainMenuScreen")
+
+	var lobby := _get_lobby() as Lobby
+	get_parent().remove_child(lobby)
+	lobby.queue_free()
+
+
 func _make_instance_of_scene_with_name(packed_scene: PackedScene, name: String) -> Node:
 	var scene = packed_scene.instance()
 	scene.name = name
@@ -50,7 +59,7 @@ func _get_lobby():
 
 
 func _on_server_disconnected():
-	navigation.show_screen("MainMenuScreen")
+	_open_main_menu()
 
 
 func _on_MainMenuScreen_create_server_pressed():
@@ -73,12 +82,7 @@ func _on_MainMenuScreen_join_server_pressed():
 
 
 func _on_LobbyScreen_back_pressed():
-	navigation.remove_screen("LobbyScreen")
-	navigation.show_screen("MainMenuScreen")
-	
-	var lobby := _get_lobby() as Lobby
-	get_parent().remove_child(lobby)
-	lobby.queue_free()
+	_open_main_menu()
 
 
 func _on_LobbyScreen_start_game_pressed():
