@@ -83,7 +83,9 @@ func _network_peer_connected(id):
 
 func _network_peer_disconnected(id):
 	Logger.info("Peer disconnected with id {}".format([id], "{}"), "Lobby")
-	emit_signal("peer_removed", _get_index_of_player(id))
+	var index := _get_index_of_player(id)
+	players_info.remove(index)
+	emit_signal("peer_removed", index)
 
 
 func _connected_to_server():
@@ -120,7 +122,7 @@ func _clear_player_list():
 	emit_signal("peers_cleared")
 
 
-func _get_index_of_player(id):
+func _get_index_of_player(id: int) -> int:
 	for index in range(players_info.size()):
 		if players_info[index].id == id:
 			return index
