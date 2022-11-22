@@ -80,6 +80,16 @@ _global_script_classes=[ {
 "path": "res://addons/gs_logger/layouts/pattern_layout.gd"
 }, {
 "base": "Node",
+"class": "ServerAdvertiser",
+"language": "GDScript",
+"path": "res://addons/LANServerBroadcast/server_advertiser/ServerAdvertiser.gd"
+}, {
+"base": "Node",
+"class": "ServerListener",
+"language": "GDScript",
+"path": "res://addons/LANServerBroadcast/server_listener/ServerListener.gd"
+}, {
+"base": "Node",
 "class": "SubSceneTree",
 "language": "GDScript",
 "path": "res://test/sub_scene_tree.gd"
@@ -119,6 +129,8 @@ _global_script_class_icons={
 "LobbyScreen": "",
 "Message": "",
 "PatternLayout": "",
+"ServerAdvertiser": "res://addons/LANServerBroadcast/server_advertiser/server_advertiser.png",
+"ServerListener": "res://addons/LANServerBroadcast/server_listener/server_listener.png",
 "SubSceneTree": "",
 "TestUtils": "",
 "UnitTest": "",
@@ -152,7 +164,7 @@ window/stretch/aspect="keep"
 
 [editor_plugins]
 
-enabled=PoolStringArray( "res://addons/gs_logger/plugin.cfg", "res://addons/gut/plugin.cfg", "res://addons/multirun/plugin.cfg" )
+enabled=PoolStringArray( "res://addons/LANServerBroadcast/plugin.cfg", "res://addons/gs_logger/plugin.cfg", "res://addons/gut/plugin.cfg", "res://addons/multirun/plugin.cfg" )
 
 [input]
 
