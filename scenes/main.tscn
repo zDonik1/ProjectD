@@ -43,5 +43,5 @@ anchor_bottom = 1.0
 
 [node name="VirtualJoystick" parent="Game/InGameUI" instance=ExtResource( 1 )]
 
-[connection signal="create_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_create_server_pressed"]
+[connection signal="host_game_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_host_game_pressed"]
 [connection signal="join_server_pressed" from="Screens/MainMenuScreen" to="Coordinator" method="_on_MainMenuScreen_join_server_pressed"]

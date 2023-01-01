@@ -3,6 +3,7 @@ extends Node
 
 const LobbyScreenScene := preload("res://screens/lobby_screen.tscn")
 const ServerLobbyScreenScene := preload("res://screens/server_lobby_screen.tscn")
+const HostGameScreenScene := preload("res://screens/host_game_screen.tscn")
 const UiNavigation := preload("res://scripts/navigation.gd")
 
 export var navigation_path: NodePath
@@ -62,11 +63,12 @@ func _on_server_disconnected():
 	_open_main_menu()
 
 
-func _on_MainMenuScreen_create_server_pressed():
-	_initialize_lobby()
-	_get_lobby().create_server()
-
-	_open_server_lobby_screen()
+func _on_MainMenuScreen_host_game_pressed():
+	var host_game_screen := HostGameScreenScene.instance()
+	host_game_screen.name = "HostGameScreen"
+	host_game_screen.connect("open_lobby_pressed", self, "_on_HostGameScreen_open_lobby_pressed")
+	navigation.add_screen(host_game_screen)
+	navigation.show_screen("HostGameScreen")
 
 
 func _on_MainMenuScreen_join_server_pressed():
@@ -79,6 +81,13 @@ func _on_MainMenuScreen_join_server_pressed():
 	yield(get_tree(), "connected_to_server")
 	
 	_open_lobby_screen()
+	
+
+func _on_HostGameScreen_open_lobby_pressed():
+	_initialize_lobby()
+	_get_lobby().create_server(navigation.get_screen("HostGameScreen").lobby_name)
+
+	_open_server_lobby_screen()
 
 
 func _on_LobbyScreen_back_pressed():
