@@ -14,6 +14,11 @@ func _ready():
 	_u = lobby.connect("peers_cleared", self, "_on_Lobby_peers_cleared")
 
 
+func init_server_advertiser(name: String):
+	$ServerAdvertiser.server_info.name = name
+	Logger.info("Server advertising has started")
+
+
 func get_item_names():
 	var result := []
 	for i in range(_player_list.get_item_count()):

@@ -1,0 +1,39 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://scripts/server_list_screen.gd" type="Script" id=1]
+[ext_resource path="res://addons/LANServerBroadcast/server_listener/ServerListener.gd" type="Script" id=2]
+
+[node name="VBoxContainer" type="VBoxContainer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+_server_list_path = NodePath("ServerList")
+
+[node name="ServerList" type="ItemList" parent="."]
+margin_right = 1024.0
+margin_bottom = 552.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="JoinServer" type="Button" parent="."]
+margin_top = 556.0
+margin_right = 1024.0
+margin_bottom = 576.0
+disabled = true
+text = "Join Server"
+
+[node name="Back" type="Button" parent="."]
+margin_top = 580.0
+margin_right = 1024.0
+margin_bottom = 600.0
+text = "Back"
+
+[node name="ServerListener" type="Node" parent="."]
+script = ExtResource( 2 )
+
+[connection signal="item_selected" from="ServerList" to="." method="_on_ServerList_item_selected"]
+[connection signal="nothing_selected" from="ServerList" to="." method="_on_ServerList_nothing_selected"]
+[connection signal="pressed" from="JoinServer" to="." method="_on_JoinServer_pressed"]
+[connection signal="pressed" from="Back" to="." method="_on_Back_pressed"]
+[connection signal="new_server" from="ServerListener" to="." method="_on_ServerListener_new_server"]
+[connection signal="remove_server" from="ServerListener" to="." method="_on_ServerListener_remove_server"]

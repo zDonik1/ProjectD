@@ -1,0 +1,60 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripts/host_game_screen.gd" type="Script" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+lobby_name_line_edit_path = NodePath("VBoxContainer/GridContainer/LobbyNameLineEdit")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -100.0
+margin_top = -10.0
+margin_right = 100.0
+margin_bottom = 34.0
+
+[node name="GridContainer" type="GridContainer" parent="VBoxContainer"]
+margin_right = 200.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+columns = 2
+
+[node name="LobbyNameLabel" type="Label" parent="VBoxContainer/GridContainer"]
+margin_top = 5.0
+margin_right = 82.0
+margin_bottom = 19.0
+rect_min_size = Vector2( 4.917, 0 )
+size_flags_vertical = 6
+text = "Lobby name:"
+
+[node name="LobbyNameLineEdit" type="LineEdit" parent="VBoxContainer/GridContainer"]
+margin_left = 86.0
+margin_right = 200.0
+margin_bottom = 24.0
+rect_min_size = Vector2( 4.917, 0 )
+size_flags_horizontal = 3
+size_flags_vertical = 7
+text = "[ Placeholder ]"
+context_menu_enabled = false
+
+[node name="OpenLobby" type="Button" parent="VBoxContainer"]
+margin_top = 28.0
+margin_right = 200.0
+margin_bottom = 48.0
+text = "Open lobby"
+
+[node name="Back" type="Button" parent="VBoxContainer"]
+margin_top = 52.0
+margin_right = 200.0
+margin_bottom = 72.0
+text = "Back"
+
+[connection signal="text_changed" from="VBoxContainer/GridContainer/LobbyNameLineEdit" to="." method="_on_LobbyNameTextEdit_text_changed"]
+[connection signal="pressed" from="VBoxContainer/OpenLobby" to="." method="_on_OpenLobby_pressed"]
+[connection signal="pressed" from="VBoxContainer/Back" to="." method="_on_Back_pressed"]

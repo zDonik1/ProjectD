@@ -9,10 +9,11 @@ const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
 
 var peer: NetworkedMultiplayerENet
-var ip_address = "127.0.0.1"
 
 var info = LobbyUtils.make_info_with_name("Player")
 var players_info := []
+
+var _server_advertiser: ServerAdvertiser
 
 
 class LobbyUtils:
@@ -53,7 +54,7 @@ func create_server():
 	call_deferred("_register_self")
 
 
-func join_server():
+func join_server(ip_address: String):
 	_ensure_peer_exists()
 	var _u := peer.create_client(ip_address, DEFAULT_PORT)
 	multiplayer.set_network_peer(peer)
