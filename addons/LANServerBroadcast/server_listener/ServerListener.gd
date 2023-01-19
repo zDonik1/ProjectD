@@ -42,7 +42,7 @@ func _process(delta):
 				gameInfo.ip = serverIp
 				gameInfo.lastSeen = OS.get_unix_time()
 				knownServers[serverIp] = gameInfo
-				Logger.debug("New server found: %s - %s:%s" % [gameInfo.name, gameInfo.ip, gameInfo.port], "ServerListener")
+				Logger.debug("New server found: %s - %s" % [gameInfo.name, gameInfo.ip], "ServerListener")
 				emit_signal("new_server", gameInfo)
 			# Update the last seen time
 			else:

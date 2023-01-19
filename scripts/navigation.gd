@@ -25,8 +25,12 @@ func add_screen(screen: Control):
 	_get_screens_root().add_child(screen)
 
 
-func remove_screen(name: String):
-	var screen_to_remove := get_screen(name)
+func remove_screen(name: String = ""):
+	var screen_to_remove: Control
+	if name.empty():
+		screen_to_remove = _active_screen
+	else:
+		screen_to_remove = get_screen(name)
 	_get_screens_root().remove_child(screen_to_remove)
 	screen_to_remove.queue_free()
 

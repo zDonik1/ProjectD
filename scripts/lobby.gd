@@ -9,7 +9,6 @@ const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
 
 var peer: NetworkedMultiplayerENet
-var ip_address = "127.0.0.1"
 
 var info = LobbyUtils.make_info_with_name("Player")
 var players_info := []
@@ -48,15 +47,14 @@ func _notification(what):
 			disconnect_from_network()
 
 
-func create_server(name: String):
+func create_server():
 	_ensure_peer_exists()
 	var _u := peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	multiplayer.set_network_peer(peer)
-	_initialize_server_advertiser(name)
 	call_deferred("_register_self")
 
 
-func join_server():
+func join_server(ip_address: String):
 	_ensure_peer_exists()
 	var _u := peer.create_client(ip_address, DEFAULT_PORT)
 	multiplayer.set_network_peer(peer)
@@ -77,15 +75,6 @@ func _ensure_peer_exists():
 
 func _make_peer() -> NetworkedMultiplayerENet:
 	return NetworkedMultiplayerENet.new()
-
-
-func _initialize_server_advertiser(name: String):
-	_server_advertiser = ServerAdvertiser.new()
-	_server_advertiser.name = "ServerAdvertiser"
-	_server_advertiser.server_info.name = name
-	_server_advertiser.server_info.port = DEFAULT_PORT
-	add_child(_server_advertiser)
-	Logger.info("Server advertising has started")
 
 
 func _network_peer_connected(id):
