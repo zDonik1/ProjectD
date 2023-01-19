@@ -1,28 +1,30 @@
 extends Node
 
-onready var _active_screen: Control = get_screen("MainMenuScreen")
+export var screens_node_path: NodePath
+
+onready var _screens_node := get_node(screens_node_path) as Node
+onready var _active_screen := _screens_node.get_node("MainMenuScreen") as Control
+onready var _screens := {_active_screen.name: _active_screen}
 
 
 func show_screen(name: String):
-	_deactivate_screen(_active_screen)
-	_active_screen = get_screen(name)
-	_activate_screen(_active_screen)
-	
-
-func show_all_screens():
-	_activate_screen(_get_screens_root())
-	
-	
-func hide_all_screens():
-	_deactivate_screen(_get_screens_root())
-	
-	
-func get_screen(name: String) -> Control:
-	return _get_screens_root().get_node(name) as Control
+	hide_screen(_active_screen.name)
+	_active_screen = _screens[name]
+	_screens_node.add_child(_active_screen)
 
 
-func add_screen(screen: Control):
-	_get_screens_root().add_child(screen)
+func hide_screen(name: String):
+	_screens_node.remove_child(_screens[name])
+
+
+func remove_all_screens():
+	_screens_node.get_parent().remove_child(_screens_node)
+	_screens_node.queue_free()
+
+
+func add_and_show_screen(screen: Control):
+	_screens[screen.name] = screen
+	show_screen(screen.name)
 
 
 func remove_screen(name: String = ""):
@@ -30,19 +32,10 @@ func remove_screen(name: String = ""):
 	if name.empty():
 		screen_to_remove = _active_screen
 	else:
-		screen_to_remove = get_screen(name)
-	_get_screens_root().remove_child(screen_to_remove)
+		screen_to_remove = _screens[name]
+	hide_screen(screen_to_remove.name)
 	screen_to_remove.queue_free()
 
 
-func _activate_screen(screen: Control):
-	screen.show()
-	screen.set_process(true)
-
-
-func _deactivate_screen(screen: Control):
-	screen.hide()
-	screen.set_process(false)
-
-func _get_screens_root() -> Control:
-	return get_node("/root/Main/Screens") as Control
+func get_screen(name: String) -> Control:
+	return _screens[name]

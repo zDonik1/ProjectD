@@ -5,6 +5,7 @@
 
 [node name="VBoxContainer" instance=ExtResource( 1 )]
 script = ExtResource( 2 )
+server_advertiser_path = NodePath("ServerAdvertiser")
 
 [node name="PlayerList" parent="." index="0"]
 margin_bottom = 552.0

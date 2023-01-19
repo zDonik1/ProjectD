@@ -24,7 +24,7 @@ func _ready():
 
 
 remotesync func _start_game():
-	navigation.hide_all_screens()
+	navigation.remove_all_screens()
 	get_node("../Game").start_game(_lobby)
 
 
@@ -42,8 +42,7 @@ func _open_lobby_screen(lobby_screen_scene: PackedScene = LobbyScreenScene):
 		"back_pressed", self, "_on_LobbyScreen_back_pressed"
 	)
 
-	navigation.add_screen(lobby_screen)
-	navigation.show_screen("LobbyScreen")
+	navigation.add_and_show_screen(lobby_screen)
 
 
 func _open_main_menu():
@@ -66,7 +65,7 @@ func _on_server_disconnected():
 
 func _on_MainMenuScreen_host_game_pressed():
 	var host_game_screen := _make_instance_of_scene_with_name(HostGameScreenScene, "HostGameScreen") as HostGameScreen
-	navigation.add_screen(host_game_screen)
+	navigation.add_and_show_screen(host_game_screen)
 	host_game_screen.lobby_name = (
 		navigation.get_screen("MainMenuScreen").player_name
 		+ "'s Lobby"
@@ -77,7 +76,6 @@ func _on_MainMenuScreen_host_game_pressed():
 	host_game_screen.connect(
 		"back_pressed", self, "_on_HostGameScreen_back_ressed"
 	)
-	navigation.show_screen("HostGameScreen")
 
 
 func _on_MainMenuScreen_join_server_pressed():
@@ -88,8 +86,7 @@ func _on_MainMenuScreen_join_server_pressed():
 	server_list_screen.connect(
 		"back_pressed", self, "_on_ServerListScreen_back_pressed"
 	)
-	navigation.add_screen(server_list_screen)
-	navigation.show_screen("ServerListScreen")
+	navigation.add_and_show_screen(server_list_screen)
 
 
 func _on_HostGameScreen_open_lobby_pressed():
