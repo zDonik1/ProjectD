@@ -49,6 +49,7 @@ func _notification(what):
 
 func create_server():
 	_ensure_peer_exists()
+	get_tree().refuse_new_network_connections = false
 	var _u := peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
 	multiplayer.set_network_peer(peer)
 	call_deferred("_register_self")
@@ -58,6 +59,10 @@ func join_server(ip_address: String):
 	_ensure_peer_exists()
 	var _u := peer.create_client(ip_address, DEFAULT_PORT)
 	multiplayer.set_network_peer(peer)
+
+
+func finish_search():
+	get_tree().refuse_new_network_connections = true
 
 
 func disconnect_from_network():

@@ -124,6 +124,7 @@ func _on_LobbyScreen_back_pressed():
 
 
 func _on_LobbyScreen_start_game_pressed():
+	_lobby.finish_search()
 	rpc("_start_game")
 
 
