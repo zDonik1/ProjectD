@@ -11,13 +11,13 @@ var knownServers = {}
 
 # Number of seconds to wait when a server hasn't been heard from
 # before calling remove_server
-export (int) var server_cleanup_threshold: int = 3
+@export (int) var server_cleanup_threshold: int = 3
 
 func _init():
 	cleanUpTimer.wait_time = server_cleanup_threshold
 	cleanUpTimer.one_shot = false
 	cleanUpTimer.autostart = true
-	cleanUpTimer.connect("timeout", self, 'clean_up')
+	cleanUpTimer.connect("timeout",Callable(self,'clean_up'))
 	add_child(cleanUpTimer)
 
 func _ready():
@@ -38,19 +38,21 @@ func _process(delta):
 			# We've discovered a new server! Add it to the list and let people know
 			if not knownServers.has(serverIp):
 				var serverMessage = array_bytes.get_string_from_ascii()
-				var gameInfo = parse_json(serverMessage)
+				var test_json_conv = JSON.new()
+				test_json_conv.parse(serverMessage)
+				var gameInfo = test_json_conv.get_data()
 				gameInfo.ip = serverIp
-				gameInfo.lastSeen = OS.get_unix_time()
+				gameInfo.lastSeen = Time.get_unix_time_from_system()
 				knownServers[serverIp] = gameInfo
 				Logger.debug("New server found: %s - %s" % [gameInfo.name, gameInfo.ip], "ServerListener")
 				emit_signal("new_server", gameInfo)
 			# Update the last seen time
 			else:
 				var gameInfo = knownServers[serverIp]
-				gameInfo.lastSeen = OS.get_unix_time()
+				gameInfo.lastSeen = Time.get_unix_time_from_system()
 
 func clean_up():
-	var now = OS.get_unix_time()
+	var now = Time.get_unix_time_from_system()
 	for serverIp in knownServers:
 		var serverInfo = knownServers[serverIp]
 		if (now - serverInfo.lastSeen) > server_cleanup_threshold:

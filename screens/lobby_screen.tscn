@@ -9,15 +9,15 @@ anchor_bottom = 1.0
 script = ExtResource( 1 )
 
 [node name="PlayerList" type="ItemList" parent="."]
-margin_right = 1024.0
-margin_bottom = 576.0
+offset_right = 1024.0
+offset_bottom = 576.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Back" type="Button" parent="."]
-margin_top = 580.0
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_top = 580.0
+offset_right = 1024.0
+offset_bottom = 600.0
 text = "Back"
 
 [node name="ServerAdvertiser" type="Node" parent="."]

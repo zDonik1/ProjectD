@@ -10,9 +10,9 @@ const HostGameScreenScene := preload("res://screens/host_game_screen.tscn")
 const ServerListScreenScene := preload("res://screens/server_list_screen.tscn")
 const UiNavigation := preload("res://scripts/navigation.gd")
 
-export var navigation_path: NodePath
+@export var navigation_path: NodePath
 
-onready var navigation := get_node(navigation_path) as UiNavigation
+@onready var navigation := get_node(navigation_path) as UiNavigation
 
 var _lobby: Lobby
 
@@ -23,7 +23,7 @@ func _ready():
 	)
 
 
-remotesync func _start_game():
+@rpc("any_peer", "call_local") func _start_game():
 	navigation.remove_all_screens()
 	get_node("../Game").start_game(_lobby)
 
@@ -109,7 +109,7 @@ func _on_ServerListScreen_join_server_pressed(ip: String):
 	navigation.get_screen("MessageScreen").message = "Connecting to server..."
 	navigation.show_screen("MessageScreen")
 
-	yield(get_tree(), "connected_to_server")
+	await get_tree().connected_to_server
 
 	_open_lobby_screen()
 
@@ -131,6 +131,6 @@ func _on_LobbyScreen_start_game_pressed():
 func _make_instance_of_scene_with_name(
 	packed_scene: PackedScene, name: String
 ) -> Node:
-	var scene = packed_scene.instance()
+	var scene = packed_scene.instantiate()
 	scene.name = name
 	return scene

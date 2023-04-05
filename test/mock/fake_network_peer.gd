@@ -16,6 +16,6 @@ func create_server(
 
 
 func status_connected():
-	set_connection_status(NetworkedMultiplayerPeer.CONNECTION_CONNECTING)
+	set_connection_status(MultiplayerPeer.CONNECTION_CONNECTING)
 	initialize(self_id)
-	set_connection_status(NetworkedMultiplayerPeer.CONNECTION_CONNECTED)
+	set_connection_status(MultiplayerPeer.CONNECTION_CONNECTED)

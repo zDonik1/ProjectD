@@ -27,7 +27,7 @@ func instantiate_client_with_name(name: String) -> Node:
 
 
 func make_main_in_sub_st(sub_st: SubSceneTree) -> Node:
-	var main := MainScene.instance()
+	var main := MainScene.instantiate()
 	sub_st.st.root.add_child(main)
 	return main
 

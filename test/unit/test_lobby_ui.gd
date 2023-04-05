@@ -12,8 +12,8 @@ class LobbyUIEnv:
 	var lobby_ui: LobbyUI
 
 	func before_each():
-		.before_each()
-		lobby_ui = partial_double("res://scenes/lobby_ui.tscn").instance()
+		super.before_each()
+		lobby_ui = partial_double("res://scenes/lobby_ui.tscn").instantiate()
 		stub(lobby_ui, "_ready").to_call_super()
 
 
@@ -23,7 +23,7 @@ class LobbyUIEnvWithLobbyAndSetNames:
 	var lobby: Lobby
 
 	func before_each():
-		.before_each()
+		super.before_each()
 		lobby_ui.set_item_names(names)
 
 		lobby = autofree(Lobby.new())

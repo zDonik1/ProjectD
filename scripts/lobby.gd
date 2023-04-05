@@ -8,7 +8,7 @@ signal peers_cleared
 const DEFAULT_PORT = 65000
 const MAX_CLIENTS = 3
 
-var peer: NetworkedMultiplayerENet
+var peer: ENetMultiplayerPeer
 
 var info = LobbyUtils.make_info_with_name("Player")
 var players_info := []
@@ -27,10 +27,10 @@ class LobbyUtils:
 func _ready():
 	var _u
 	_u = multiplayer.connect(
-		"network_peer_connected", self, "_network_peer_connected"
+		"peer_connected", self, "_network_peer_connected"
 	)
 	_u = multiplayer.connect(
-		"network_peer_disconnected", self, "_network_peer_disconnected"
+		"peer_disconnected", self, "_network_peer_disconnected"
 	)
 	_u = multiplayer.connect(
 		"connected_to_server", self, "_connected_to_server"
@@ -38,7 +38,7 @@ func _ready():
 	_u = multiplayer.connect(
 		"server_disconnected", self, "_server_disconnected"
 	)
-	_u = multiplayer.connect("connection_failed", self, "_connection_failed")
+	_u = multiplayer.connect("connection_failed",Callable(self,"_connection_failed"))
 
 
 func _notification(what):
@@ -49,20 +49,20 @@ func _notification(what):
 
 func create_server():
 	_ensure_peer_exists()
-	get_tree().refuse_new_network_connections = false
+	get_tree().refuse_new_connections = false
 	var _u := peer.create_server(DEFAULT_PORT, MAX_CLIENTS)
-	multiplayer.set_network_peer(peer)
+	multiplayer.set_multiplayer_peer(peer)
 	call_deferred("_register_self")
 
 
 func join_server(ip_address: String):
 	_ensure_peer_exists()
 	var _u := peer.create_client(ip_address, DEFAULT_PORT)
-	multiplayer.set_network_peer(peer)
+	multiplayer.set_multiplayer_peer(peer)
 
 
 func finish_search():
-	get_tree().refuse_new_network_connections = true
+	get_tree().refuse_new_connections = true
 
 
 func disconnect_from_network():
@@ -78,8 +78,8 @@ func _ensure_peer_exists():
 		peer = _make_peer()
 
 
-func _make_peer() -> NetworkedMultiplayerENet:
-	return NetworkedMultiplayerENet.new()
+func _make_peer() -> ENetMultiplayerPeer:
+	return ENetMultiplayerPeer.new()
 
 
 func _network_peer_connected(id):
@@ -108,12 +108,12 @@ func _server_disconnected():
 	_clear_player_list()
 
 
-remote func _register_new_player(_info: Dictionary):
-	_register_player(multiplayer.get_rpc_sender_id(), _info)
+@rpc("any_peer") func _register_new_player(_info: Dictionary):
+	_register_player(multiplayer.get_remote_sender_id(), _info)
 
 
 func _register_self():
-	_register_player(multiplayer.get_network_unique_id(), info)
+	_register_player(multiplayer.get_unique_id(), info)
 
 
 func _register_player(id: int, _info: Dictionary):

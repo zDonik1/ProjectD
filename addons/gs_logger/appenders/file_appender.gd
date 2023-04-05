@@ -24,8 +24,7 @@ func stop():
 
 
 func _init(filename : String ="%s.log" % ProjectSettings.get("application/config/name")):
-	savefile = File.new()
-	savefile.open("%s" % [filename], File.WRITE)
+	savefile = FileAccess.open("%s" % [filename], FileAccess.WRITE)
 	name = "file appender"
 	print("** File Appender Initialized **")
 	print(" ")

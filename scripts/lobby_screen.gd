@@ -5,13 +5,13 @@ signal back_pressed
 
 var lobby: Lobby
 
-onready var _player_list: ItemList = $PlayerList
+@onready var _player_list: ItemList = $PlayerList
 
 
 func _ready():
-	var _u := lobby.connect("peer_added", self, "_on_Lobby_peer_added")
-	_u = lobby.connect("peer_removed", self, "_on_Lobby_peer_removed")
-	_u = lobby.connect("peers_cleared", self, "_on_Lobby_peers_cleared")
+	var _u := lobby.connect("peer_added",Callable(self,"_on_Lobby_peer_added"))
+	_u = lobby.connect("peer_removed",Callable(self,"_on_Lobby_peer_removed"))
+	_u = lobby.connect("peers_cleared",Callable(self,"_on_Lobby_peers_cleared"))
 
 
 func init_server_advertiser(name: String):

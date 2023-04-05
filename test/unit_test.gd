@@ -6,7 +6,7 @@ class FakeMultiplayerAPI:
 
 	var sender_id: int
 
-	func get_rpc_sender_id() -> int:
+	func get_remote_sender_id() -> int:
 		return sender_id
 
 
