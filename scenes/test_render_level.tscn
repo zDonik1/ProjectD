@@ -1,6 +1,9 @@
-[gd_scene load_steps=6 format=3 uid="uid://d0gr8jspnsipj"]
+[gd_scene load_steps=7 format=3 uid="uid://d0gr8jspnsipj"]
 
 [ext_resource type="PackedScene" path="res://scenes/heavyweight.tscn" id="1"]
+[ext_resource type="Script" path="res://scripts/player_controller.gd" id="2_bindd"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wi28y"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_llwgc"]
 
@@ -13,15 +16,9 @@ sky = SubResource("Sky_w5sey")
 ambient_light_source = 1
 ambient_light_color = Color(0, 1, 0, 1)
 
-[sub_resource type="PlaneMesh" id="PlaneMesh_wi28y"]
-
 [node name="Main" type="Node3D"]
 
 [node name="Heavyweight" parent="." instance=ExtResource("1")]
-
-[node name="Camera3D" type="Camera3D" parent="."]
-transform = Transform3D(0.680401, -0.241405, 0.691938, 0, 0.944187, 0.329411, -0.73284, -0.224131, 0.642426, 3.76691, 3.67459, 3.15829)
-environment = SubResource("Environment_jt66o")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(-0.7043, -0.553013, 0.445127, 0, 0.627025, 0.778999, -0.709903, 0.548649, -0.441614, 0, 5.94887, 0)
@@ -32,3 +29,15 @@ mesh = SubResource("PlaneMesh_wi28y")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.81283, 2.35088, 2.91239)
+
+[node name="PlayerController" type="Node3D" parent="."]
+transform = Transform3D(0.622487, 0, 0.78263, 0, 1, 0, -0.78263, 0, 0.622487, 0, 0, 0)
+script = ExtResource("2_bindd")
+
+[node name="Pitch" type="Node3D" parent="PlayerController"]
+transform = Transform3D(1, 1.49012e-07, 0, 0, 0.410114, 0.912034, 2.98023e-08, -0.912034, 0.410114, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="PlayerController/Pitch"]
+transform = Transform3D(1, -2.98023e-07, 1.93715e-07, 1.19209e-07, 1, -1.93715e-07, -1.63913e-07, -1.04308e-07, 1, 3.57628e-06, -6.91414e-06, 17.0458)
+environment = SubResource("Environment_jt66o")
+fov = 30.0
