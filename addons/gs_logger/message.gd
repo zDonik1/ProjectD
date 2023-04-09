@@ -6,7 +6,7 @@
 #	A Layout will Format a message before it is sent to
 #	its assigned Appender.
 
-extends Reference
+extends RefCounted
 class_name Message
 
 var level : int
@@ -16,7 +16,7 @@ var line : int
 var data
 
 
-func _init(level : int =000, text : String = "", category : String = "general", line : int = 0, data = {}):
+func _init(level : int =000,text : String = "",category : String = "general",line : int = 0,data = {}):
 	
 	self.level = level
 	self.text = text

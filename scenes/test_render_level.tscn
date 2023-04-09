@@ -1,0 +1,59 @@
+[gd_scene load_steps=10 format=3 uid="uid://d0gr8jspnsipj"]
+
+[ext_resource type="PackedScene" path="res://scenes/heavyweight.tscn" id="1"]
+[ext_resource type="Script" path="res://scripts/player_controller.gd" id="2_bindd"]
+[ext_resource type="Shader" path="res://shaders/pixelate.gdshader" id="3_l1qkb"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_wi28y"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_llwgc"]
+
+[sub_resource type="Sky" id="Sky_w5sey"]
+sky_material = SubResource("ProceduralSkyMaterial_llwgc")
+
+[sub_resource type="Environment" id="Environment_jt66o"]
+background_mode = 2
+sky = SubResource("Sky_w5sey")
+ambient_light_source = 1
+ambient_light_color = Color(0, 1, 0, 1)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_jriek"]
+render_priority = 0
+shader = ExtResource("3_l1qkb")
+shader_parameter/horizontal_resolution = 160.0
+
+[sub_resource type="QuadMesh" id="QuadMesh_fubmf"]
+flip_faces = true
+size = Vector2(2, 2)
+
+[node name="Main" type="Node3D"]
+
+[node name="Heavyweight" parent="." instance=ExtResource("1")]
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(-0.7043, -0.553013, 0.445127, 0, 0.627025, 0.778999, -0.709903, 0.548649, -0.441614, 0, 5.94887, 0)
+
+[node name="Ground" type="MeshInstance3D" parent="."]
+transform = Transform3D(7.8793, 0, 0, 0, 1.20302, 0, 0, 0, 10.4361, 0, 0, 0)
+mesh = SubResource("PlaneMesh_wi28y")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.81283, 2.35088, 2.91239)
+
+[node name="PlayerController" type="Node3D" parent="."]
+transform = Transform3D(0.622487, 0, 0.78263, 0, 1, 0, -0.78263, 0, 0.622487, 0, 0, 0)
+script = ExtResource("2_bindd")
+
+[node name="Pitch" type="Node3D" parent="PlayerController"]
+transform = Transform3D(1, 1.49012e-07, 0, 0, 0.410114, 0.912034, 2.98023e-08, -0.912034, 0.410114, 0, 0, 0)
+
+[node name="Camera3D" type="Camera3D" parent="PlayerController/Pitch"]
+transform = Transform3D(1, -2.98023e-07, 1.93715e-07, 1.19209e-07, 1, -1.93715e-07, -1.63913e-07, -1.04308e-07, 1, 3.57628e-06, -6.91414e-06, 17.0458)
+environment = SubResource("Environment_jt66o")
+fov = 30.0
+
+[node name="PostProcess" type="MeshInstance3D" parent="PlayerController/Pitch/Camera3D"]
+transform = Transform3D(1, -2.98023e-08, 0, 2.98023e-08, 1, 0, -1.49012e-08, -4.47035e-08, 1, 0, 0, 0)
+material_override = SubResource("ShaderMaterial_jriek")
+extra_cull_margin = 16384.0
+mesh = SubResource("QuadMesh_fubmf")

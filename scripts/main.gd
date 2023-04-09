@@ -13,7 +13,7 @@ func _ready():
 func _start_server_game():
 	$Screens/MainMenuScreen.emit_signal("create_server_pressed")
 
-	yield(get_tree().create_timer(0.5), "timeout")
+	await get_tree().create_timer(0.5).timeout
 
 	$Navigation.get_screen("LobbyScreen").emit_signal("start_game_pressed")
 

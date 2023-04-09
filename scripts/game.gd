@@ -21,17 +21,17 @@ func _instantiate_all_payers():
 		var current_id := player_info.id as int
 		var player := _instance_player(current_id)
 
-		if current_id == get_tree().get_network_unique_id():
+		if current_id == get_tree().get_unique_id():
 			_player = player
 	
 
 func _instance_player(id: int) -> Node:
-	var player := PlayerScene.instance()
+	var player := PlayerScene.instantiate()
 	player.name = "Player_{0}".format([id])
 	player.spawn_position = Vector2(
-		_rng.randi_range(0, ProjectSettings.get_setting("display/window/size/width")),
-		_rng.randi_range(0, ProjectSettings.get_setting("display/window/size/height"))
+		_rng.randi_range(0, ProjectSettings.get_setting("display/window/size/viewport_width")),
+		_rng.randi_range(0, ProjectSettings.get_setting("display/window/size/viewport_height"))
 	)
-	player.set_network_master(id)
+	player.set_multiplayer_authority(id)
 	$World.add_child(player)
 	return player

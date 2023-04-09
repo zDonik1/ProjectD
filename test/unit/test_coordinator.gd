@@ -7,7 +7,7 @@ class CoordinatorEnv:
 	var coordinator: Coordinator
 
 	func before_each():
-		.before_each()
+		super.before_each()
 		coordinator = add_child_autofree(Coordinator.new())
 
 	func after_each():
@@ -22,7 +22,7 @@ class CoordinatorEnvWithMainMenuAndLobby:
 	var lobby: Lobby
 
 	func before_each():
-		.before_each()
+		super.before_each()
 		coordinator.add_main_menu()
 
 		lobby = double(Lobby).new()

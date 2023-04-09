@@ -3,9 +3,9 @@ extends Control
 signal join_server_pressed(ip)
 signal back_pressed
 
-export var _server_list_path: NodePath
+@export var _server_list_path: NodePath
 
-onready var _server_list := get_node(_server_list_path) as ItemList
+@onready var _server_list := get_node(_server_list_path) as ItemList
 
 var _server_infos := []
 var _selected_server_index: int

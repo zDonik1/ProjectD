@@ -5,7 +5,7 @@ var screen_message
 
 func before_each():
 	screen_message = autofree(
-		preload("res://scenes/screen_message.tscn").instance()
+		preload("res://scenes/screen_message.tscn").instantiate()
 	)
 
 

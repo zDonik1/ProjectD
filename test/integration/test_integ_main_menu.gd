@@ -20,7 +20,7 @@ func test_create_server_button_click_creates_server_and_opens_lobby_ui():
 	var _u := scene_tree.idle(0.1)
 
 	assert_true(
-		scene_tree.is_network_server(), "check that peer is network server"
+		scene_tree.is_server(), "check that peer is network server"
 	)
 	assert_true(
 		main.has_node("LobbyUI"),
@@ -33,7 +33,7 @@ func test_join_server_button_click_joins_server_and_shows_connecting_message():
 	var _u := scene_tree.idle(0.1)
 
 	assert_true(
-		scene_tree.has_network_peer(), "check that peer is valid"
+		scene_tree.has_multiplayer_peer(), "check that peer is valid"
 	)
 	assert_true(
 		main.has_node("ConnectingMessage"),

@@ -1,9 +1,9 @@
 extends Control
 
-export var message := "[Message placeholder]" setget set_message, get_message
+@export var message := "[Message placeholder]" : get = get_message, set = set_message
 
 
-func set_message(var message: String):
+func set_message(message: String):
 	$Label.text = message
 
 

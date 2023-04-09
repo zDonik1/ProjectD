@@ -10,22 +10,22 @@ script = ExtResource( 1 )
 _server_list_path = NodePath("ServerList")
 
 [node name="ServerList" type="ItemList" parent="."]
-margin_right = 1024.0
-margin_bottom = 552.0
+offset_right = 1024.0
+offset_bottom = 552.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="JoinServer" type="Button" parent="."]
-margin_top = 556.0
-margin_right = 1024.0
-margin_bottom = 576.0
+offset_top = 556.0
+offset_right = 1024.0
+offset_bottom = 576.0
 disabled = true
 text = "Join Server"
 
 [node name="Back" type="Button" parent="."]
-margin_top = 580.0
-margin_right = 1024.0
-margin_bottom = 600.0
+offset_top = 580.0
+offset_right = 1024.0
+offset_bottom = 600.0
 text = "Back"
 
 [node name="ServerListener" type="Node" parent="."]

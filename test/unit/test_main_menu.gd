@@ -5,8 +5,8 @@ var lobby
 
 
 func before_each():
-	.before_each()
-	main_menu = partial_double("res://scenes/main_menu.tscn").instance()
+	super.before_each()
+	main_menu = partial_double("res://scenes/main_menu.tscn").instantiate()
 	stub(main_menu, "_ready").to_call_super()
 	watch_signals(main_menu)
 	add_child(main_menu)

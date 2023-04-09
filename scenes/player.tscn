@@ -1,11 +1,11 @@
 [gd_scene load_steps=4 format=2]
 
-[ext_resource path="res://assets/circle_placeholder.png" type="Texture" id=1]
+[ext_resource path="res://assets/circle_placeholder.png" type="Texture2D" id=1]
 [ext_resource path="res://scripts/player.gd" type="Script" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
 
-[node name="Player" type="KinematicBody2D"]
+[node name="Player" type="CharacterBody2D"]
 script = ExtResource( 2 )
 __meta__ = {
 "_edit_group_": true
@@ -14,7 +14,7 @@ __meta__ = {
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
-[node name="Sprite" type="Sprite" parent="."]
+[node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2( -1.78814e-07, 8.34465e-07 )
 scale = Vector2( 0.0137566, 0.0137566 )
 texture = ExtResource( 1 )

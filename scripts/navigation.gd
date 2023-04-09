@@ -1,10 +1,10 @@
 extends Node
 
-export var screens_node_path: NodePath
+@export var screens_node_path: NodePath
 
-onready var _screens_node := get_node(screens_node_path) as Node
-onready var _active_screen := _screens_node.get_node("MainMenuScreen") as Control
-onready var _screens := {_active_screen.name: _active_screen}
+@onready var _screens_node := get_node(screens_node_path) as Node
+@onready var _active_screen := _screens_node.get_node("MainMenuScreen") as Control
+@onready var _screens := {_active_screen.name: _active_screen}
 
 
 func show_screen(name: String):
@@ -29,7 +29,7 @@ func add_and_show_screen(screen: Control):
 
 func remove_screen(name: String = ""):
 	var screen_to_remove: Control
-	if name.empty():
+	if name.is_empty():
 		screen_to_remove = _active_screen
 	else:
 		screen_to_remove = _screens[name]

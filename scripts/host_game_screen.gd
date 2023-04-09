@@ -3,15 +3,15 @@ extends Control
 signal open_lobby_pressed
 signal back_pressed
 
-export var lobby_name_line_edit_path: NodePath
+@export var lobby_name_line_edit_path: NodePath
 
-var lobby_name: String setget _set_lobby_name, _get_lobby_name
+var lobby_name: String : get = _get_lobby_name, set = _set_lobby_name
 
-onready var _lobby_name_line_edit := get_node(lobby_name_line_edit_path) as LineEdit
+@onready var _lobby_name_line_edit := get_node(lobby_name_line_edit_path) as LineEdit
 
 
 func _on_OpenLobby_pressed():
-	if not _lobby_name_line_edit.text.empty():
+	if not _lobby_name_line_edit.text.is_empty():
 		emit_signal("open_lobby_pressed")
 
 

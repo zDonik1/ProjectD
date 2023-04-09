@@ -7,7 +7,7 @@ class LobbyEnv:
 	var lobby
 
 	func before_each():
-		.before_each()
+		super.before_each()
 		lobby = partial_double(Lobby, DOUBLE_STRATEGY.FULL).new()
 		stub(lobby, "_ready").to_call_super()
 		stub(lobby, "_make_peer").to_return(FakeNetworkMultiplayerENet.new())
@@ -21,7 +21,7 @@ class LobbyEnvWithPeer:
 	var peer
 
 	func before_each():
-		.before_each()
+		super.before_each()
 		peer = partial_double(FakeNetworkMultiplayerENet).new()
 		lobby.peer = peer
 
@@ -32,7 +32,7 @@ class LobbyEnvWithConnectedPeer:
 	var self_id = 123
 
 	func before_each():
-		.before_each()
+		super.before_each()
 		peer.self_id = self_id
 		peer.status_connected()
 		multiplayer_inst.network_peer = peer
@@ -50,7 +50,7 @@ class TestLobby:
 	func test_has_peer_after_joining_server():
 		lobby.join_server()
 
-		assert_true(lobby.multiplayer.has_network_peer())
+		assert_true(lobby.multiplayer.has_multiplayer_peer())
 
 	func test_creating_server_intializes_players_info_with_self_info():
 		lobby.create_server()
@@ -82,8 +82,8 @@ class TestLobbyReceivers:
 	var network_connection_params = ParameterFactory.named_parameters(
 		["signal", "receiver"],
 		[
-			["network_peer_connected", "_network_peer_connected"],
-			["network_peer_disconnected", "_network_peer_disconnected"],
+			["peer_connected", "_network_peer_connected"],
+			["peer_disconnected", "_network_peer_disconnected"],
 		]
 	)
 
@@ -184,7 +184,7 @@ class TestLobbyWithRpcCalls:
 
 	func before_each():
 		stub(Lobby, "rpc_id").to_do_nothing().param_count(3)
-		.before_each()
+		super.before_each()
 
 	func test_rpc_register_new_player_by_player_to_connected_player_when_peer_connected():
 		var id = 15
