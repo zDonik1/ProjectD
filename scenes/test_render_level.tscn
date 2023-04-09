@@ -1,10 +1,14 @@
-[gd_scene load_steps=10 format=3 uid="uid://d0gr8jspnsipj"]
+[gd_scene load_steps=12 format=3 uid="uid://d0gr8jspnsipj"]
 
 [ext_resource type="PackedScene" path="res://scenes/heavyweight.tscn" id="1"]
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="2_bindd"]
 [ext_resource type="Shader" path="res://shaders/pixelate.gdshader" id="3_l1qkb"]
+[ext_resource type="Script" path="res://scripts/camera.gd" id="3_ticdk"]
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_wi28y"]
+size = Vector2(20, 20)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_y11nn"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_llwgc"]
 
@@ -20,7 +24,6 @@ ambient_light_color = Color(0, 1, 0, 1)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jriek"]
 render_priority = 0
 shader = ExtResource("3_l1qkb")
-shader_parameter/horizontal_resolution = 160.0
 
 [sub_resource type="QuadMesh" id="QuadMesh_fubmf"]
 flip_faces = true
@@ -34,26 +37,31 @@ size = Vector2(2, 2)
 transform = Transform3D(-0.7043, -0.553013, 0.445127, 0, 0.627025, 0.778999, -0.709903, 0.548649, -0.441614, 0, 5.94887, 0)
 
 [node name="Ground" type="MeshInstance3D" parent="."]
-transform = Transform3D(7.8793, 0, 0, 0, 1.20302, 0, 0, 0, 10.4361, 0, 0, 0)
 mesh = SubResource("PlaneMesh_wi28y")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.81283, 2.35088, 2.91239)
 
 [node name="PlayerController" type="Node3D" parent="."]
-transform = Transform3D(0.622487, 0, 0.78263, 0, 1, 0, -0.78263, 0, 0.622487, 0, 0, 0)
+transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("2_bindd")
 
-[node name="Pitch" type="Node3D" parent="PlayerController"]
-transform = Transform3D(1, 1.49012e-07, 0, 0, 0.410114, 0.912034, 2.98023e-08, -0.912034, 0.410114, 0, 0, 0)
+[node name="Placeholder" type="MeshInstance3D" parent="PlayerController"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+mesh = SubResource("CapsuleMesh_y11nn")
 
-[node name="Camera3D" type="Camera3D" parent="PlayerController/Pitch"]
-transform = Transform3D(1, -2.98023e-07, 1.93715e-07, 1.19209e-07, 1, -1.93715e-07, -1.63913e-07, -1.04308e-07, 1, 3.57628e-06, -6.91414e-06, 17.0458)
+[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 5, 7.07107, 5)
 environment = SubResource("Environment_jt66o")
+projection = 1
 fov = 30.0
+size = 16.0
+script = ExtResource("3_ticdk")
+target = NodePath("../PlayerController")
 
-[node name="PostProcess" type="MeshInstance3D" parent="PlayerController/Pitch/Camera3D"]
+[node name="PostProcess" type="MeshInstance3D" parent="Camera3D"]
 transform = Transform3D(1, -2.98023e-08, 0, 2.98023e-08, 1, 0, -1.49012e-08, -4.47035e-08, 1, 0, 0, 0)
+visible = false
 material_override = SubResource("ShaderMaterial_jriek")
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_fubmf")
