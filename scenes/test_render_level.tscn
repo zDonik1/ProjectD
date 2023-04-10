@@ -24,6 +24,10 @@ ambient_light_color = Color(0, 1, 0, 1)
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_jriek"]
 render_priority = 0
 shader = ExtResource("3_l1qkb")
+shader_parameter/orthographic_size = null
+shader_parameter/resolution = null
+shader_parameter/zoom = null
+shader_parameter/offset = null
 
 [sub_resource type="QuadMesh" id="QuadMesh_fubmf"]
 flip_faces = true
@@ -51,7 +55,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_y11nn")
 
 [node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
-transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 5, 7.07107, 5)
+transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 5, 7.07107, 5)
 environment = SubResource("Environment_jt66o")
 projection = 1
 fov = 30.0
@@ -61,7 +65,6 @@ target = NodePath("../PlayerController")
 
 [node name="PostProcess" type="MeshInstance3D" parent="Camera3D"]
 transform = Transform3D(1, -2.98023e-08, 0, 2.98023e-08, 1, 0, -1.49012e-08, -4.47035e-08, 1, 0, 0, 0)
-visible = false
 material_override = SubResource("ShaderMaterial_jriek")
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_fubmf")
