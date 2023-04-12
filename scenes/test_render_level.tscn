@@ -1,70 +1,72 @@
-[gd_scene load_steps=12 format=3 uid="uid://d0gr8jspnsipj"]
+[gd_scene load_steps=9 format=3 uid="uid://ch26xcqfd0uk4"]
 
 [ext_resource type="PackedScene" path="res://scenes/heavyweight.tscn" id="1"]
+[ext_resource type="Script" path="res://scenes/test_render_level.gd" id="1_1jnty"]
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="2_bindd"]
-[ext_resource type="Shader" path="res://shaders/pixelate.gdshader" id="3_l1qkb"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="3_ticdk"]
+[ext_resource type="Shader" path="res://shaders/viewport_subpixel.gdshader" id="4_ve3gv"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_1m8p7"]
+shader = ExtResource("4_ve3gv")
+shader_parameter/offset = Vector2(0, 0)
 
 [sub_resource type="PlaneMesh" id="PlaneMesh_wi28y"]
 size = Vector2(20, 20)
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_y11nn"]
 
-[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_llwgc"]
+[node name="Main" type="Node"]
+script = ExtResource("1_1jnty")
+pixel_resolution = Vector2i(320, 240)
+pixel_container_path = NodePath("PixelViewportContainer")
+pixel_viewport_path = NodePath("PixelViewportContainer/PixelViewport")
 
-[sub_resource type="Sky" id="Sky_w5sey"]
-sky_material = SubResource("ProceduralSkyMaterial_llwgc")
+[node name="PixelViewportContainer" type="SubViewportContainer" parent="."]
+texture_filter = 1
+material = SubResource("ShaderMaterial_1m8p7")
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -640.0
+offset_top = -488.0
+offset_right = -479.0
+offset_bottom = -367.0
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(8, 8)
 
-[sub_resource type="Environment" id="Environment_jt66o"]
-background_mode = 2
-sky = SubResource("Sky_w5sey")
-ambient_light_source = 1
-ambient_light_color = Color(0, 1, 0, 1)
+[node name="PixelViewport" type="SubViewport" parent="PixelViewportContainer"]
+handle_input_locally = false
+size = Vector2i(161, 121)
+render_target_update_mode = 4
 
-[sub_resource type="ShaderMaterial" id="ShaderMaterial_jriek"]
-render_priority = 0
-shader = ExtResource("3_l1qkb")
-shader_parameter/orthographic_size = null
-shader_parameter/resolution = null
-shader_parameter/zoom = null
-shader_parameter/offset = null
+[node name="Heavyweight" parent="PixelViewportContainer/PixelViewport" instance=ExtResource("1")]
 
-[sub_resource type="QuadMesh" id="QuadMesh_fubmf"]
-flip_faces = true
-size = Vector2(2, 2)
+[node name="Sun" type="DirectionalLight3D" parent="PixelViewportContainer/PixelViewport"]
+transform = Transform3D(-0.7043, -0.553014, 0.445127, 0, 0.627025, 0.778999, -0.709903, 0.548649, -0.441614, 0, 5.94887, 0)
 
-[node name="Main" type="Node3D"]
-
-[node name="Heavyweight" parent="." instance=ExtResource("1")]
-
-[node name="Sun" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.7043, -0.553013, 0.445127, 0, 0.627025, 0.778999, -0.709903, 0.548649, -0.441614, 0, 5.94887, 0)
-
-[node name="Ground" type="MeshInstance3D" parent="."]
+[node name="Ground" type="MeshInstance3D" parent="PixelViewportContainer/PixelViewport"]
 mesh = SubResource("PlaneMesh_wi28y")
+skeleton = NodePath("")
 
-[node name="OmniLight3D" type="OmniLight3D" parent="."]
+[node name="OmniLight3D" type="OmniLight3D" parent="PixelViewportContainer/PixelViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.81283, 2.35088, 2.91239)
 
-[node name="PlayerController" type="Node3D" parent="."]
+[node name="PlayerController" type="Node3D" parent="PixelViewportContainer/PixelViewport"]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)
 script = ExtResource("2_bindd")
 
-[node name="Placeholder" type="MeshInstance3D" parent="PlayerController"]
+[node name="Placeholder" type="MeshInstance3D" parent="PixelViewportContainer/PixelViewport/PlayerController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_y11nn")
 
-[node name="Camera3D" type="Camera3D" parent="." node_paths=PackedStringArray("target")]
-transform = Transform3D(0.707107, -0.353553, 0.612372, 0, 0.866025, 0.5, -0.707107, -0.353553, 0.612372, 5, 7.07107, 5)
-environment = SubResource("Environment_jt66o")
+[node name="Camera3D" type="Camera3D" parent="PixelViewportContainer/PixelViewport" node_paths=PackedStringArray("target", "render_target")]
+transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.499999, -0.707107, -0.353553, 0.612373, 5, 7.07107, 5)
 projection = 1
 fov = 30.0
 size = 16.0
 script = ExtResource("3_ticdk")
 target = NodePath("../PlayerController")
-
-[node name="PostProcess" type="MeshInstance3D" parent="Camera3D"]
-transform = Transform3D(1, -2.98023e-08, 0, 2.98023e-08, 1, 0, -1.49012e-08, -4.47035e-08, 1, 0, 0, 0)
-material_override = SubResource("ShaderMaterial_jriek")
-extra_cull_margin = 16384.0
-mesh = SubResource("QuadMesh_fubmf")
+render_target = NodePath("../..")
