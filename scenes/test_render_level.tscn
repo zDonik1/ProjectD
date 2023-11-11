@@ -1,11 +1,12 @@
-[gd_scene load_steps=10 format=3 uid="uid://ch26xcqfd0uk4"]
+[gd_scene load_steps=11 format=3 uid="uid://ch26xcqfd0uk4"]
 
 [ext_resource type="PackedScene" path="res://scenes/heavyweight.tscn" id="1"]
 [ext_resource type="Script" path="res://scenes/test_render_level.gd" id="1_1jnty"]
 [ext_resource type="Script" path="res://scripts/player_controller.gd" id="2_bindd"]
 [ext_resource type="Script" path="res://scripts/camera.gd" id="3_ticdk"]
+[ext_resource type="Material" uid="uid://bs2gn0cdsd4d" path="res://materials/ground.tres" id="4_kohi0"]
 [ext_resource type="Shader" path="res://shaders/viewport_subpixel.gdshader" id="4_ve3gv"]
-[ext_resource type="Material" uid="uid://bb43ngplsfis2" path="res://addons/flexible_toon_shader/FlexibleToonMaterial.tres" id="5_ft0fs"]
+[ext_resource type="Material" uid="uid://dw4f8axyfj2f5" path="res://materials/placeholder_character.tres" id="6_numpx"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_1m8p7"]
 shader = ExtResource("4_ve3gv")
@@ -51,6 +52,7 @@ transform = Transform3D(-0.7043, -0.553014, 0.445127, 0, 0.627025, 0.778999, -0.
 [node name="Ground" type="MeshInstance3D" parent="PixelViewportContainer/PixelViewport"]
 mesh = SubResource("PlaneMesh_wi28y")
 skeleton = NodePath("")
+surface_material_override/0 = ExtResource("4_kohi0")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="PixelViewportContainer/PixelViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.81283, 2.35088, 2.91239)
@@ -62,7 +64,7 @@ script = ExtResource("2_bindd")
 [node name="Placeholder" type="MeshInstance3D" parent="PixelViewportContainer/PixelViewport/PlayerController"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
 mesh = SubResource("CapsuleMesh_y11nn")
-surface_material_override/0 = ExtResource("5_ft0fs")
+surface_material_override/0 = ExtResource("6_numpx")
 
 [node name="Camera3D" type="Camera3D" parent="PixelViewportContainer/PixelViewport" node_paths=PackedStringArray("target", "render_target")]
 transform = Transform3D(0.707107, -0.353553, 0.612373, 0, 0.866026, 0.499999, -0.707107, -0.353553, 0.612373, 5, 7.07107, 5)
