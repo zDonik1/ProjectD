@@ -1,0 +1,9 @@
+[gd_scene load_steps=3 format=3 uid="uid://bdvjfaq8och3e"]
+
+[ext_resource type="PackedScene" uid="uid://degayn2x2lik1" path="res://assets/stone.glb" id="1_jh4av"]
+[ext_resource type="Material" uid="uid://dyueo0sp0n45e" path="res://materials/stone.tres" id="2_evihc"]
+
+[node name="Root" instance=ExtResource("1_jh4av")]
+
+[node name="Cube" parent="." index="0"]
+surface_material_override/0 = ExtResource("2_evihc")
