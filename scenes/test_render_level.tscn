@@ -48,6 +48,7 @@ render_target_update_mode = 4
 
 [node name="Sun" type="DirectionalLight3D" parent="PixelViewportContainer/PixelViewport"]
 transform = Transform3D(-0.7043, -0.553014, 0.445127, 0, 0.627025, 0.778999, -0.709903, 0.548649, -0.441614, 0, 5.94887, 0)
+light_energy = 3.0
 
 [node name="Ground" type="MeshInstance3D" parent="PixelViewportContainer/PixelViewport"]
 mesh = SubResource("PlaneMesh_wi28y")
@@ -56,6 +57,7 @@ surface_material_override/0 = ExtResource("4_kohi0")
 
 [node name="OmniLight3D" type="OmniLight3D" parent="PixelViewportContainer/PixelViewport"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.81283, 2.35088, 2.91239)
+light_energy = 2.0
 
 [node name="PlayerController" type="Node3D" parent="PixelViewportContainer/PixelViewport"]
 transform = Transform3D(0.707107, 0, 0.707107, 0, 1, 0, -0.707107, 0, 0.707107, 0, 0, 0)

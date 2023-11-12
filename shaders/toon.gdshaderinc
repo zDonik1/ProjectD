@@ -1,8 +1,3 @@
-shader_type spatial;
-
-//render_mode ambient_light_disabled;
-
-
 uniform vec4 albedo : source_color = vec4(1.0f);
 uniform sampler2D albedo_texture : source_color;
 uniform bool clamp_diffuse_to_max = false;
@@ -31,44 +26,39 @@ uniform float border_width = 0.01f;
 varying vec3 vertex_pos;
 varying vec3 normal;
 
-float split_specular(float specular) {
+float _split_specular(float specular) {
 	return step(0.5f, specular);
 }
 
-void vertex() {
-	vertex_pos = VERTEX;
-	normal = NORMAL;
-}
-
-void fragment() {
-	ALBEDO = albedo.rgb * texture(albedo_texture, UV).rgb;
-}
-
-void light() {
-	// Attenuation.
-	float attenuation = 1.0f;
+float _used_attenuation(float attenuation) {
 	if (use_attenuation) {
-		attenuation = ATTENUATION;
+		return attenuation;
 	}
-	
+	return 1.0;
+}
+
+vec3 toon_fragment_albedo(vec2 uv) {
+	return albedo.rgb * texture(albedo_texture, uv).rgb;
+}
+
+vec3 toon_light_diffuse(vec3 in_normal, vec3 light, vec3 light_color, float attenuation, vec3 in_albedo, vec3 diffuse_light) {
 	// Diffuse lighting.
-	float NdotL = dot(NORMAL, LIGHT);
-	float diffuse_amount = NdotL + (attenuation - 1.0) + wrap;
-	//float diffuse_amount = NdotL * attenuation + wrap;
+	float NdotL = dot(in_normal, light);
+	float diffuse_amount = NdotL + (_used_attenuation(attenuation) - 1.0) + wrap;
 	diffuse_amount *= steepness;
 	float cuts_inv = 1.0f / float(cuts);
 	float diffuse_stepped = clamp(diffuse_amount + mod(1.0f - diffuse_amount, cuts_inv), 0.0f, 1.0f);
-
+	
 	// Calculate borders.
 	float border = 0.0f;
 	if (use_borders) {
-		float corr_border_width = length(cross(NORMAL, LIGHT)) * border_width * steepness;
+		float corr_border_width = length(cross(in_normal, light)) * border_width * steepness;
 		border = step(diffuse_stepped - corr_border_width, diffuse_amount)
 				 - step(1.0 - corr_border_width, diffuse_amount);
 	}
 	
 	// Apply diffuse result to different styles.
-	vec3 diffuse = ALBEDO.rgb * LIGHT_COLOR / PI;
+	vec3 diffuse = in_albedo * light_color / PI;
 	if (use_ramp) {
 		diffuse *= texture(ramp, vec2(diffuse_stepped * (1.0f - border), 0.0f)).rgb;
 	} else {
@@ -77,26 +67,33 @@ void light() {
 	
 	if (clamp_diffuse_to_max) {
 		// Clamp diffuse to max for multiple light sources.
-		DIFFUSE_LIGHT = max(DIFFUSE_LIGHT, diffuse);
+		return max(diffuse_light, diffuse);
 	} else {
-		DIFFUSE_LIGHT += diffuse;
+		return diffuse_light + diffuse;
 	}
-	
+}
+
+vec3 toon_light_specular(vec3 in_normal, vec2 uv, vec3 view, vec3 light, 
+	vec3 light_color, float attenuation, vec3 specular_light)
+{
 	// Specular lighting.
 	if (use_specular) {
-		vec3 H = normalize(LIGHT + VIEW);
-		float NdotH = dot(NORMAL, H);
-		float specular_amount = max(pow(NdotH, specular_shininess*specular_shininess), 0.0f)
-							    * texture(specular_map, UV).r
-								* attenuation;
-		specular_amount = split_specular(specular_amount);
-		SPECULAR_LIGHT += specular_strength * specular_amount * LIGHT_COLOR;
+		vec3 H = normalize(light + view);
+		float NdotH = dot(in_normal, H);
+		float specular_amount = 
+			max(pow(NdotH, specular_shininess * specular_shininess), 0.0f)
+			* texture(specular_map, uv).r
+			* _used_attenuation(attenuation);
+		specular_amount = _split_specular(specular_amount);
+		specular_light += specular_strength * specular_amount * light_color;
 	}
 	
 	// Simple rim lighting.
 	if (use_rim) {
-		float NdotV = dot(NORMAL, VIEW);
+		float NdotV = dot(in_normal, view);
 		float rim_light = pow(1.0 - NdotV, rim_width);
-		SPECULAR_LIGHT += rim_light * rim_color.rgb * rim_color.a * LIGHT_COLOR / PI; //Changed DIFFUSE_LIGHT to SPECULAR_LIGHT while migrating for similar result
+		specular_light += rim_light * rim_color.rgb * rim_color.a * light_color / PI;
 	}
+	
+	return specular_light;
 }

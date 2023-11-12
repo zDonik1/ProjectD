@@ -1,10 +1,10 @@
 [gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://dw4f8axyfj2f5"]
 
-[ext_resource type="Shader" path="res://addons/flexible_toon_shader/flexible_toon.gdshader" id="1_pcijv"]
+[ext_resource type="Shader" path="res://shaders/toon.gdshader" id="1_u144e"]
 
 [resource]
 render_priority = 0
-shader = ExtResource("1_pcijv")
+shader = ExtResource("1_u144e")
 shader_parameter/albedo = Color(0.941176, 0.831373, 0.356863, 1)
 shader_parameter/clamp_diffuse_to_max = false
 shader_parameter/cuts = 2
