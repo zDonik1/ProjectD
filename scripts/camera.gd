@@ -8,19 +8,20 @@ const TARGET_DISTANCE := 20
 
 func _process(delta):
 	var pixel_to_height_ratio := render_target.size.y / size
-	var local_position_to_target := basis.z * TARGET_DISTANCE
-	var screen_space_pos := _global_to_screen_space(target.global_position + local_position_to_target)
-	var pixel_pos := screen_space_pos * pixel_to_height_ratio
-	var ss_actual_pos := Vector3(floor(pixel_pos.x), floor(pixel_pos.y), pixel_pos.z)
-	global_position = _screen_to_global_space(ss_actual_pos / pixel_to_height_ratio)
+	var camera_offset_from_target := basis.z * TARGET_DISTANCE
+	var camera_global_position := target.global_position + camera_offset_from_target
+	var camera_space_pos := _global_to_camera_space(camera_global_position)
+	var pixel_pos := camera_space_pos * pixel_to_height_ratio
+	var camera_space_snapped_pos := Vector3(floor(pixel_pos.x), floor(pixel_pos.y), pixel_pos.z)
+	global_position = _camera_to_global_space(camera_space_snapped_pos / pixel_to_height_ratio)
 	
-	var subpixel_pos := pixel_pos - ss_actual_pos
+	var subpixel_pos := pixel_pos - camera_space_snapped_pos
 	render_target.material.set_shader_parameter("offset", Vector2(-subpixel_pos.x, subpixel_pos.y))
 
 
-func _global_to_screen_space(vector: Vector3) -> Vector3:
+func _global_to_camera_space(vector: Vector3) -> Vector3:
 	return vector * global_transform.basis
 	
 
-func _screen_to_global_space(vector: Vector3) -> Vector3:
+func _camera_to_global_space(vector: Vector3) -> Vector3:
 	return global_transform.basis * vector
