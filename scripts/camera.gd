@@ -7,16 +7,16 @@ const TARGET_DISTANCE := 20
 
 
 func _process(delta):
-	var pixel_to_height_ratio := render_target.size.y / size
 	var camera_offset_from_target := basis.z * TARGET_DISTANCE
 	var camera_global_position := target.global_position + camera_offset_from_target
 	var camera_space_pos := _global_to_camera_space(camera_global_position)
+	var pixel_to_height_ratio := render_target.size.y / size
 	var pixel_pos := camera_space_pos * pixel_to_height_ratio
 	var camera_space_snapped_pos := Vector3(floor(pixel_pos.x), floor(pixel_pos.y), pixel_pos.z)
 	global_position = _camera_to_global_space(camera_space_snapped_pos / pixel_to_height_ratio)
 	
-	var subpixel_pos := pixel_pos - camera_space_snapped_pos
-	render_target.material.set_shader_parameter("offset", Vector2(-subpixel_pos.x, subpixel_pos.y))
+	var subpixel_offset := pixel_pos - camera_space_snapped_pos
+	render_target.material.set_shader_parameter("offset", Vector2(-subpixel_offset.x, subpixel_offset.y))
 
 
 func _global_to_camera_space(vector: Vector3) -> Vector3:

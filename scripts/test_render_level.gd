@@ -16,10 +16,10 @@ func _ready():
 			Current widht:height = {0}:{1}".format([width, height]))
 		return
 	
-	var window_resolution := Vector2i(width, height)
 	var full_resolution := pixel_resolution + Vector2i.ONE
 	_pixel_viewport.size = full_resolution
 	_pixel_container.size = full_resolution
-	var scale = window_resolution / pixel_resolution
+
+	var scale = Vector2i(width, height) / pixel_resolution
 	_pixel_container.scale = scale
 	_pixel_container.position.y = -scale.y
