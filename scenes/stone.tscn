@@ -6,4 +6,5 @@
 [node name="Root" instance=ExtResource("1_jh4av")]
 
 [node name="Cube" parent="." index="0"]
+layers = 3
 surface_material_override/0 = ExtResource("2_evihc")

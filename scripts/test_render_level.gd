@@ -3,9 +3,11 @@ extends Node
 @export var pixel_resolution := Vector2i(160, 120)
 @export_node_path("SubViewportContainer") var pixel_container_path
 @export_node_path("SubViewport") var pixel_viewport_path
+@export_node_path("SubViewport") var depth_viewport_path
 
 @onready var _pixel_container := get_node(pixel_container_path) as SubViewportContainer
 @onready var _pixel_viewport := get_node(pixel_viewport_path) as SubViewport
+@onready var _depth_viewport := get_node(depth_viewport_path) as SubViewport
 
 
 func _ready():
@@ -17,9 +19,10 @@ func _ready():
 		return
 	
 	var full_resolution := pixel_resolution + Vector2i.ONE
-	_pixel_viewport.size = full_resolution
 	_pixel_container.size = full_resolution
+	_pixel_viewport.size = full_resolution
+	_depth_viewport.size = full_resolution
 
-	var scale = Vector2i(width, height) / pixel_resolution
+	var scale = Vector2i(int(width), int(height)) / pixel_resolution
 	_pixel_container.scale = scale
 	_pixel_container.position.y = -scale.y
