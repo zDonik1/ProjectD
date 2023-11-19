@@ -78,6 +78,7 @@ size = 16.0
 
 [node name="OutlineDepthMesh" type="MeshInstance3D" parent="PixelViewportContainer/PixelViewport/OutlineDepthViewport/OutlineDepthCamera3D"]
 transform = Transform3D(1, 0, 0, 0, 0.999999, 0, 0, -2.98023e-08, 1, 0, 0, 0)
+visible = false
 layers = 2
 extra_cull_margin = 16384.0
 mesh = SubResource("QuadMesh_4essq")
