@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 shader_type spatial;
 render_mode unshaded;
 
@@ -27,4 +28,39 @@ void fragment()
 	if (is_approx_equal(depth, texture(depth_texture, SCREEN_UV).r)) {
 		ALBEDO = mix(ALBEDO, vec3(1, 0, 0), 0.2);
 	}
+=======
+shader_type spatial;
+render_mode unshaded;
+
+uniform sampler2D outline_depth_texture: source_color;
+uniform sampler2D screen_texture: source_color, hint_screen_texture;
+uniform sampler2D normal_texture: hint_normal_roughness_texture;
+uniform sampler2D depth_texture: hint_depth_texture;
+
+bool is_approx_equal(float a, float b)
+{
+	return abs(a - b) < 0.001;
+}
+
+void vertex()
+{
+	POSITION = vec4(VERTEX, 1.0);
+}
+
+void fragment()
+{
+	vec4 encoded_depth = texture(outline_depth_texture, SCREEN_UV);
+	int depth = 0;
+	depth = depth | int(encoded_depth.a * 256.0);
+	depth = depth << 8 | int(encoded_depth.b * 256.0);
+	depth = depth << 8 | int(encoded_depth.g * 256.0);
+	depth = depth << 8 | int(encoded_depth.r * 256.0);
+	
+	ALBEDO = vec3(intBitsToFloat(depth));
+	
+//	ALBEDO = texture(screen_texture, SCREEN_UV).rgb;
+//	if (is_approx_equal(intBitsToFloat(depth), texture(depth_texture, SCREEN_UV).r)) {
+//		ALBEDO = mix(ALBEDO, vec3(1, 0, 0), 0.2);
+//	}
+>>>>>>> Stashed changes
 }
